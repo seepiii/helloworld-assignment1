@@ -29,7 +29,7 @@ body {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-2.5px);
+    transform: translateY(-6px);
   }
 }
 
@@ -52,13 +52,16 @@ body {
 }
 
 .letter-inner {
-  animation: float 4.5s ease-in-out infinite;
+  animation: float 3.5s ease-in-out infinite;
   transition:
     color 0.5s ease,
     text-shadow 0.5s ease;
 }
 
 .letter-wrapper:hover .letter-inner {
-  color: #e5e7eb;
-  text-shadow: 0 0 12px rgba(229, 231, 235, 0.35);
+  color: #f8fafc;
+  text-shadow:
+    0 0 10px rgba(248, 250, 252, 0.85),
+    0 0 24px rgba(191, 219, 254, 0.55),
+    0 0 48px rgba(191, 219, 254, 0.3);
 }
