@@ -48,14 +48,13 @@ export default function Home() {
   const stars = useStars(140);
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#03040f]">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#060607]">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 20% 20%, rgba(99,44,166,0.35), transparent 55%), " +
-            "radial-gradient(ellipse at 80% 70%, rgba(28,78,168,0.35), transparent 55%), " +
-            "radial-gradient(ellipse at 50% 100%, rgba(10,10,30,0.9), #03040f 70%)",
+            "radial-gradient(ellipse at 50% 30%, rgba(30,33,40,0.6), transparent 60%), " +
+            "radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.9), #060607 70%)",
         }}
       />
 
@@ -99,7 +98,7 @@ export default function Home() {
           ))}
         </h1>
         <p className="text-sm tracking-[0.3em] text-white/40 uppercase">
-          hover the letters — gravity&apos;s optional out here
+          Sampadaa Prakash
         </p>
       </div>
     </main>
