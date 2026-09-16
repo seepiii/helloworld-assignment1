@@ -48,13 +48,12 @@ export default function Home() {
   const stars = useStars(140);
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#060607]">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#050505]">
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
-          background:
-            "radial-gradient(ellipse at 50% 30%, rgba(30,33,40,0.6), transparent 60%), " +
-            "radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.9), #060607 70%)",
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
         }}
       />
 
