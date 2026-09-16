@@ -96,7 +96,10 @@ export default function Home() {
             </span>
           ))}
         </h1>
-        <p className="text-sm tracking-[0.3em] text-white/40 uppercase">
+        <p
+          className="text-sm tracking-[0.3em] text-white/40 uppercase"
+          style={{ textShadow: "0 0 10px rgba(233, 196, 106, 0.18)" }}
+        >
           Sampadaa Prakash
         </p>
       </div>
