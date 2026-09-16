@@ -88,7 +88,7 @@ export default function Home() {
               }
             >
               <span
-                className="letter-inner inline-block text-[#e9c46a]"
+                className="letter-inner inline-block text-white"
                 style={{ animationDelay: l.delay }}
               >
                 {l.char === " " ? " " : l.char}
@@ -96,7 +96,7 @@ export default function Home() {
             </span>
           ))}
         </h1>
-        <p className="text-sm tracking-[0.3em] text-[#e9c46a]/40 uppercase">
+        <p className="text-sm tracking-[0.3em] text-white/40 uppercase">
           Sampadaa Prakash
         </p>
       </div>
