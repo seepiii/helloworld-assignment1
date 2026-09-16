@@ -18,9 +18,9 @@ function useLetters(text: string) {
         const r3 = seeded(i + 201);
         return {
           char,
-          tx: `${(r1 - 0.5) * 90}px`,
-          ty: `${(r2 - 0.5) * 90 - 20}px`,
-          rot: `${(r3 - 0.5) * 70}deg`,
+          tx: `${(r1 - 0.5) * 30}px`,
+          ty: `${(r2 - 0.5) * 24 - 10}px`,
+          rot: `${(r3 - 0.5) * 16}deg`,
           delay: `${(r1 * 2).toFixed(2)}s`,
         };
       }),
