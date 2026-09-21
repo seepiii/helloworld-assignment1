@@ -54,6 +54,9 @@ export default async function PlanetsPage() {
                 <p className="mt-3 text-xs tracking-[0.15em] text-[#e9c46a]/70 uppercase">
                   {planet.distance_from_sun} from the sun
                 </p>
+                <p className="mt-1 text-xs tracking-[0.15em] text-white/40 uppercase">
+                  {planet.gravity_vs_earth}&times; Earth&apos;s gravity
+                </p>
               </li>
             ))}
           </ul>

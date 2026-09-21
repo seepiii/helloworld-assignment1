@@ -10,4 +10,5 @@ export type Planet = {
   name: string;
   description: string;
   distance_from_sun: string;
+  gravity_vs_earth: number;
 };
