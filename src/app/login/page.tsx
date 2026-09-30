@@ -13,7 +13,12 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const { error } = await searchParams;
 
   return (
-    <Panel title="Sign in" subtitle="board the ship">
+    <Panel title="Crew sign in" subtitle="board the ship">
+      <p className="text-sm leading-relaxed text-white/70">
+        Sign in with Google to unlock{" "}
+        <span className="font-bold text-[#f4dfa6]">Mission Control</span> and
+        your crew profile.
+      </p>
       {error && (
         <p className="w-full rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-200">
           Sign-in didn&apos;t complete. Please try again.

@@ -158,3 +158,28 @@ body {
     animation: none;
   }
 }
+
+/* Pulsing gold glow to draw the eye to sign-in calls to action */
+@keyframes cta-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 14px rgba(233, 196, 106, 0.25),
+      inset 0 0 10px rgba(233, 196, 106, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(233, 196, 106, 0.5),
+      inset 0 0 14px rgba(233, 196, 106, 0.15);
+  }
+}
+
+.cta-glow {
+  animation: cta-pulse 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-glow {
+    animation: none;
+  }
+}

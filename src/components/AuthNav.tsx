@@ -34,7 +34,10 @@ export default async function AuthNav() {
           </form>
         </>
       ) : (
-        <Link href="/login" className={linkClass}>
+        <Link
+          href="/login"
+          className="cta-glow rounded-full border border-[#e9c46a]/70 bg-[#e9c46a]/15 px-5 py-2 text-xs font-bold tracking-[0.2em] text-[#f4dfa6] uppercase transition hover:bg-[#e9c46a]/25 hover:text-white"
+        >
           sign in
         </Link>
       )}
