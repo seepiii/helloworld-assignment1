@@ -19,6 +19,7 @@ export type Profile = {
   first_name: string | null;
   last_name: string | null;
   avatar_url: string | null;
+  created_at?: string;
 };
 
 export function needsName(profile: Profile | null) {

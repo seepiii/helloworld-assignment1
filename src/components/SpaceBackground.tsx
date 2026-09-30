@@ -11,11 +11,12 @@ function useStars(count: number) {
   return useMemo(
     () =>
       Array.from({ length: count }, (_, i) => {
-        const top = seeded(i + 1) * 100;
-        const left = seeded(i + 501) * 100;
-        const size = 1 + seeded(i + 1001) * 2;
-        const delay = seeded(i + 1501) * 4;
-        const duration = 2 + seeded(i + 2001) * 3;
+        // Rounded so server and browser render identical strings (avoids hydration mismatch).
+        const top = (seeded(i + 1) * 100).toFixed(3);
+        const left = (seeded(i + 501) * 100).toFixed(3);
+        const size = (1 + seeded(i + 1001) * 2).toFixed(2);
+        const delay = (seeded(i + 1501) * 4).toFixed(2);
+        const duration = (2 + seeded(i + 2001) * 3).toFixed(2);
         return { top, left, size, delay, duration };
       }),
     [count],

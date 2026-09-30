@@ -10,7 +10,7 @@ export default async function AuthNav() {
   const { user, profile } = await getUserAndProfile();
 
   return (
-    <nav className="fixed top-0 right-0 z-50 flex items-center gap-5 px-6 py-5">
+    <nav className="absolute top-0 right-0 z-50 flex items-center gap-5 px-6 py-5">
       {user ? (
         <>
           <Link href="/mission-control" className={linkClass}>

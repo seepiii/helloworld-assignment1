@@ -63,3 +63,98 @@ body {
     0 0 30px rgba(233, 196, 106, 0.5),
     0 0 55px rgba(233, 196, 106, 0.3);
 }
+
+/* Mission Control */
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes liftoff {
+  0% {
+    transform: translateY(0);
+  }
+  15% {
+    transform: translate(-1px, 1px);
+  }
+  30% {
+    transform: translate(1px, -1px);
+  }
+  100% {
+    transform: translateY(-140px);
+    opacity: 0;
+  }
+}
+
+.orbit {
+  transform-box: view-box;
+  transform-origin: center;
+  animation: orbit linear infinite;
+}
+
+.status-light {
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+.hud-panel {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(4px);
+}
+
+.hud-panel::before,
+.hud-panel::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(233, 196, 106, 0.6);
+  pointer-events: none;
+}
+
+.hud-panel::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.hud-panel::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.scanline {
+  animation: scan 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit,
+  .status-light,
+  .scanline {
+    animation: none;
+  }
+}
