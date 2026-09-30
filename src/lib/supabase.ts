@@ -12,3 +12,15 @@ export type Planet = {
   distance_from_sun: string;
   gravity_vs_earth: number;
 };
+
+export type Profile = {
+  id: string;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+};
+
+export function needsName(profile: Profile | null) {
+  return !profile?.first_name?.trim() || !profile?.last_name?.trim();
+}
