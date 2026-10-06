@@ -9,6 +9,8 @@ import OrbitTracker from "./OrbitTracker";
 import GravityConsole from "./GravityConsole";
 import MissionLog from "./MissionLog";
 import LaunchControl from "./LaunchControl";
+import { getTodayAnomaly } from "@/lib/observatory-server";
+import { kindInfo, type FeedReport } from "@/lib/observatory";
 
 // Members-only page. The proxy already bounces signed-out visitors to /login;
 // this check is the authoritative one.
@@ -22,6 +24,18 @@ export default async function MissionControlPage() {
     .select("*")
     .order("id", { ascending: true })
     .returns<Planet[]>();
+
+  const anomaly = await getTodayAnomaly(supabase);
+  const [{ data: discovery }, { data: myReports }] = await Promise.all([
+    anomaly
+      ? supabase.from("report_feed").select("*").eq("anomaly_date", anomaly.date)
+          .order("score", { ascending: false }).order("created_at", { ascending: true })
+          .limit(1).maybeSingle<FeedReport>()
+      : Promise.resolve({ data: null }),
+    supabase.from("report_feed").select("id, subject, kind, score, created_at")
+      .eq("user_id", user.id).order("created_at", { ascending: false }).limit(4)
+      .returns<Pick<FeedReport, "id" | "subject" | "kind" | "score" | "created_at">[]>(),
+  ]);
 
   const first = profile?.first_name ?? "Commander";
   const fullName = `${profile?.first_name ?? ""} ${profile?.last_name ?? ""}`.trim();
@@ -48,6 +62,7 @@ export default async function MissionControlPage() {
     `Crew record ${callsign} loaded`,
     `Telemetry received for ${planets?.length ?? 0} planets`,
     "All stations report go",
+    `Observatory online — today's anomaly: ${anomaly?.subject ?? "none"}`,
     `Welcome to Mission Control, ${first}.`,
   ];
 
@@ -123,6 +138,45 @@ export default async function MissionControlPage() {
           {/* Launch */}
           <HudPanel label="Launch pad 39A" code="GO/NO-GO">
             <LaunchControl name={first} />
+          </HudPanel>
+
+          <HudPanel label="Discovery of the day" code={anomaly ? anomaly.date : "—"} className="lg:col-span-2">
+            {anomaly && (
+              <p className="font-mono text-xs text-white/50">
+                Today&apos;s anomaly: <span className="text-white">{anomaly.subject}</span>
+              </p>
+            )}
+            {discovery ? (
+              <Link href={`/observatory/${discovery.id}`} className="group flex flex-col gap-2">
+                <p className="font-mono text-sm leading-relaxed whitespace-pre-line text-white/80 line-clamp-5 group-hover:text-white">{discovery.body}</p>
+                <p className="font-mono text-[10px] tracking-[0.2em] text-[#e9c46a]/70 uppercase">
+                  {kindInfo(discovery.kind).label} · Agent {discovery.author_name ?? "Unknown"} · {discovery.score > 0 ? `+${discovery.score}` : discovery.score} votes
+                </p>
+              </Link>
+            ) : (
+              <p className="text-sm text-white/50">No one has investigated today&apos;s anomaly yet. Be the first.</p>
+            )}
+            <Link href="/observatory/new?anomaly=1" className="mt-auto font-mono text-[10px] tracking-[0.25em] text-[#f4dfa6] uppercase hover:text-white">
+              Investigate the anomaly &rarr;
+            </Link>
+          </HudPanel>
+
+          <HudPanel label="My reports" code={`${myReports?.length ?? 0} recent`}>
+            {myReports && myReports.length > 0 ? (
+              <ul className="flex flex-col gap-2 font-mono text-xs">
+                {myReports.map((r) => (
+                  <li key={r.id} className="flex justify-between gap-3">
+                    <Link href={`/observatory/${r.id}`} className="truncate text-white/70 hover:text-white">{kindInfo(r.kind).icon} {r.subject}</Link>
+                    <span className="shrink-0 text-white/50 tabular-nums">{r.score > 0 ? `+${r.score}` : r.score}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-white/50">You haven&apos;t filed any reports yet.</p>
+            )}
+            <Link href="/observatory" className="mt-auto font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase hover:text-white/70">
+              Open the Observatory &rarr;
+            </Link>
           </HudPanel>
 
           {/* Orbit map */}
