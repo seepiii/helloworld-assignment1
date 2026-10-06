@@ -50,7 +50,7 @@ export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: A
     e.preventDefault();
     setError(null);
     if (info.photo === "required" && !photo) return setError("Transmissions need a photo.");
-    if (!subject.trim() && kind !== "transmission") return setError("Tell the Observatory what to study.");
+    if (!subject.trim() && !photo) return setError("Tell the Observatory what to study, or add a photo.");
 
     setBusy(true);
     try {
@@ -115,13 +115,15 @@ export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: A
 
       <div className="hud-panel flex flex-col gap-4 p-5">
         <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">2 · What should the alien study?</span>
+        <span className="-mt-2 text-xs text-white/45">Type a subject, add a photo, or both. With a photo, the alien studies what&apos;s in it.</span>
         {anomaly && (
           <label className="flex items-center gap-3 text-sm text-white/70">
             <input type="checkbox" checked={useAnomaly} onChange={(e) => toggleAnomaly(e.target.checked)} className="h-4 w-4 accent-[#7ee2a8]" />
             Use today&apos;s anomaly: <strong className="text-white">{anomaly.subject}</strong>
           </label>
         )}
-        <input value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={140} placeholder={info.placeholder}
+        <input value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={140}
+          placeholder={photo ? "optional with a photo — the alien will work out what it is" : info.placeholder}
           className="w-full rounded-lg border border-white/15 bg-black/40 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-[#e9c46a]/60" />
         <div className="flex flex-wrap items-center gap-4">
           <button type="button" onClick={() => fileRef.current?.click()} className="rounded-lg border border-dashed border-white/25 px-4 py-2 text-xs tracking-[0.1em] text-white/60 uppercase hover:border-white/50 hover:text-white">

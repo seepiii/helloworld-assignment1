@@ -22,11 +22,22 @@ export type PromptInput = {
   hasImage?: boolean;
 };
 
+const TITLE_RULE = `The user gave no subject, so work it out from the photo.
+Begin your reply with a line "TITLE: " followed by a 3 to 8 word title for what the photo shows, then a blank line, then the report.`;
+
 export function buildPrompt({ kind, subject, anomaly, hasImage }: PromptInput) {
-  const system = `${BASE}\n\n${FORMATS[kind]}`;
+  const needsTitle = !subject && !!hasImage;
+  const system = `${BASE}\n\n${FORMATS[kind]}${needsTitle ? `\n\n${TITLE_RULE}` : ""}`;
   const lines = [subject ? `Subject: ${subject}` : "Subject: (see photo)"];
   if (anomaly) lines.push(`This is for today's Daily Anomaly: "${anomaly}".`);
   if (hasImage) lines.push("A photo is attached — base the report on what you see in it.");
   const user = lines.join("\n");
-  return { system, user, stored: `${system}\n\n---\n\n${user}` };
+  return { system, user, stored: `${system}\n\n---\n\n${user}`, needsTitle };
+}
+
+/** Separates a leading "TITLE: …" line (requested for photo-only reports) from the report body. */
+export function splitTitle(text: string): { title: string | null; body: string } {
+  const match = text.match(/^\s*TITLE:\s*(.+?)\s*(?:\n|$)/i);
+  if (!match) return { title: null, body: text };
+  return { title: match[1].slice(0, 140), body: text.slice(match[0].length).trim() };
 }

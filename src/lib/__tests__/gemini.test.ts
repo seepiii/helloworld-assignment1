@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { generateReport, GenerationError } from "../gemini";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { generateReport, GenerationError, resetCooldowns } from "../gemini";
 
 const ok = (text: string) =>
   new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text }] }, finishReason: "STOP" }] }));
@@ -8,6 +8,8 @@ const busy = () => new Response(JSON.stringify({ error: { code: 503 } }), { stat
 const input = { system: "sys", user: "usr", apiKey: "k" };
 
 describe("generateReport", () => {
+  beforeEach(() => resetCooldowns());
+
   it("returns text and the model that answered", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(ok("hello humans"));
     const r = await generateReport({ ...input, fetchImpl, models: ["m1"] });
@@ -44,5 +46,23 @@ describe("generateReport", () => {
     const err = await generateReport({ ...input, fetchImpl, models: ["m1", "m2"] }).catch((e) => e);
     expect(err).toBeInstanceOf(GenerationError);
     expect(err.reason).toBe("unavailable");
+  });
+
+  it("skips a model that was busy moments ago", async () => {
+    const first = vi.fn().mockResolvedValueOnce(busy()).mockResolvedValueOnce(ok("a"));
+    await generateReport({ ...input, fetchImpl: first, models: ["m1", "m2"] });
+
+    const second = vi.fn().mockResolvedValue(ok("b"));
+    const r = await generateReport({ ...input, fetchImpl: second, models: ["m1", "m2"] });
+    expect(r.model).toBe("m2");
+    expect(second).toHaveBeenCalledTimes(1);
+  });
+
+  it("still tries cooled-down models if nothing else is left", async () => {
+    await generateReport({
+      ...input, models: ["m1"], fetchImpl: vi.fn().mockResolvedValue(busy()),
+    }).catch(() => {});
+    const r = await generateReport({ ...input, models: ["m1"], fetchImpl: vi.fn().mockResolvedValue(ok("c")) });
+    expect(r.model).toBe("m1");
   });
 });

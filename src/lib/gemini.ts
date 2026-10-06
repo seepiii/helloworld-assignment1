@@ -2,6 +2,20 @@
 export const MODELS = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite"];
 
 const RETRYABLE = new Set([404, 429, 500, 503]);
+const COOLDOWN_MS = 2 * 60 * 1000;
+const FAST_TIMEOUT_MS = 10_000; // busy models sometimes hang instead of returning 503
+const LAST_TIMEOUT_MS = 25_000;
+
+// Models that just failed are skipped for a couple of minutes (per server instance).
+const cooldownUntil = new Map<string, number>();
+
+export function resetCooldowns() {
+  cooldownUntil.clear();
+}
+
+function coolDown(model: string) {
+  cooldownUntil.set(model, Date.now() + COOLDOWN_MS);
+}
 
 export class GenerationError extends Error {
   constructor(
@@ -38,8 +52,16 @@ export async function generateReport({
     generationConfig: { temperature: 1, maxOutputTokens: 400 },
   });
 
+  // Healthy models first; recently failed ones stay at the back as a last resort.
+  const now = Date.now();
+  const ordered = [
+    ...models.filter((m) => (cooldownUntil.get(m) ?? 0) <= now),
+    ...models.filter((m) => (cooldownUntil.get(m) ?? 0) > now),
+  ];
+
   let lastStatus = 0;
-  for (const model of models) {
+  for (const [i, model] of ordered.entries()) {
+    const isLast = i === ordered.length - 1;
     let res: Response;
     try {
       res = await fetchImpl(
@@ -48,16 +70,20 @@ export async function generateReport({
           method: "POST",
           headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
           body,
-          signal: AbortSignal.timeout(25_000),
+          signal: AbortSignal.timeout(isLast ? LAST_TIMEOUT_MS : FAST_TIMEOUT_MS),
         },
       );
     } catch {
-      continue; // network error or timeout: try the next model
+      coolDown(model); // network error or timeout: try the next model
+      continue;
     }
 
     if (!res.ok) {
       lastStatus = res.status;
-      if (RETRYABLE.has(res.status)) continue;
+      if (RETRYABLE.has(res.status)) {
+        coolDown(model);
+        continue;
+      }
       throw new GenerationError("unavailable", `Gemini returned ${res.status}`);
     }
 
@@ -74,6 +100,7 @@ export async function generateReport({
       .join("")
       .trim();
     if (!text) throw new GenerationError("empty", "Model returned no text");
+    cooldownUntil.delete(model);
     return { text, model };
   }
 

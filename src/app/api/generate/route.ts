@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServer } from "@/lib/supabase-server";
 import { isReportKind } from "@/lib/observatory";
-import { buildPrompt } from "@/lib/prompts";
+import { buildPrompt, splitTitle } from "@/lib/prompts";
 import { generateReport, GenerationError } from "@/lib/gemini";
 import { getTodayAnomaly } from "@/lib/observatory-server";
 
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
   const anomaly = useAnomaly ? await getTodayAnomaly(supabase) : null;
   if (!subject && anomaly) subject = anomaly.subject;
-  if (!subject && kind !== "transmission") return fail(400, "Tell the Observatory what to study.");
+  if (!subject && !image) return fail(400, "Tell the Observatory what to study, or add a photo.");
 
   // Rate limit: protects the free Gemini quota.
   const since = new Date(Date.now() - 3600 * 1000).toISOString();
@@ -68,6 +68,12 @@ export async function POST(request: Request) {
     return fail(503, "Transmission lost — the AI is busy. Try again in a moment.");
   }
 
+  // Photo-only reports come back with a "TITLE:" line we use as the subject.
+  const { title, body } = prompt.needsTitle
+    ? splitTitle(result.text)
+    : { title: null, body: result.text };
+  const finalSubject = subject || title || "Untitled photo";
+
   // Upload only after a successful generation, so failed attempts leave nothing behind.
   let imageUrl: string | null = null;
   if (bytes && image) {
@@ -85,10 +91,10 @@ export async function POST(request: Request) {
     .insert({
       user_id: user.id,
       kind,
-      subject: subject || "Untitled photo",
+      subject: finalSubject,
       prompt: prompt.stored,
       model: result.model,
-      body: result.text,
+      body,
       image_url: imageUrl,
       anomaly_date: anomaly?.date ?? null,
     })
@@ -96,5 +102,5 @@ export async function POST(request: Request) {
     .single();
   if (error) return fail(500, `Couldn't save the report: ${error.message}`);
 
-  return NextResponse.json({ id: report.id, body: result.text, model: result.model, imageUrl, subject });
+  return NextResponse.json({ id: report.id, body, model: result.model, imageUrl, subject: finalSubject });
 }

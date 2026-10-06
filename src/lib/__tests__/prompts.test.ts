@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildPrompt } from "../prompts";
+import { buildPrompt, splitTitle } from "../prompts";
 
 describe("buildPrompt", () => {
   it("includes the subject and kind-specific format", () => {
@@ -27,4 +27,27 @@ describe("buildPrompt", () => {
     expect(p.stored).toContain(p.system);
     expect(p.stored).toContain(p.user);
   });
+
+  it("asks the model to title a photo-only report", () => {
+    const p = buildPrompt({ kind: "field_note", subject: "", hasImage: true });
+    expect(p.needsTitle).toBe(true);
+    expect(p.system).toContain("TITLE:");
+  });
+
+  it("doesn't ask for a title when the user gave a subject", () => {
+    const p = buildPrompt({ kind: "field_note", subject: "bodega cats", hasImage: true });
+    expect(p.needsTitle).toBe(false);
+    expect(p.system).not.toContain("TITLE:");
+  });
+});
+
+describe("splitTitle", () => {
+  it("pulls the TITLE line off the top of the reply", () =>
+    expect(splitTitle("TITLE: Lawn Ritual Near Butler\n\nFIELD NOTE #412: ...")).toEqual({
+      title: "Lawn Ritual Near Butler",
+      body: "FIELD NOTE #412: ...",
+    }));
+
+  it("leaves replies without a TITLE line alone", () =>
+    expect(splitTitle("FIELD NOTE #1: hi")).toEqual({ title: null, body: "FIELD NOTE #1: hi" }));
 });

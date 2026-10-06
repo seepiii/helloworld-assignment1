@@ -116,35 +116,38 @@ body {
   animation: blink 1.6s ease-in-out infinite;
 }
 
-.hud-panel {
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(4px);
-}
+/* In the components layer so Tailwind utilities (e.g. a selected-state border) can override it. */
+@layer components {
+  .hud-panel {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(4px);
+  }
 
-.hud-panel::before,
-.hud-panel::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: rgba(233, 196, 106, 0.6);
-  pointer-events: none;
-}
+  .hud-panel::before,
+  .hud-panel::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(233, 196, 106, 0.6);
+    pointer-events: none;
+  }
 
-.hud-panel::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1px solid;
-  border-left: 1px solid;
-}
+  .hud-panel::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
 
-.hud-panel::after {
-  right: -1px;
-  bottom: -1px;
-  border-right: 1px solid;
-  border-bottom: 1px solid;
+  .hud-panel::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+  }
 }
 
 .scanline {
