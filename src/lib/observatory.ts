@@ -1,4 +1,6 @@
-export type ReportKind = "field_note" | "exoplanet" | "transmission";
+export type ReportKind = "field_note" | "exoplanet" | "transmission" | "postcard";
+/** Report types written as text by /api/generate (postcards come from the Teleporter). */
+export type TextReportKind = Exclude<ReportKind, "postcard">;
 export type Vote = -1 | 0 | 1;
 
 export type KindInfo = {
@@ -40,6 +42,15 @@ export const KINDS: KindInfo[] = [
     placeholder: "optional note, e.g. my roommate's fridge",
     photo: "required",
   },
+  {
+    id: "postcard",
+    label: "Postcard",
+    icon: "✉",
+    blurb: "Pick a planet. The alien artist paints your subject there.",
+    example: "“my dorm room” → Saturn",
+    placeholder: "e.g. my dorm room, the Halal cart line",
+    photo: "optional",
+  },
 ];
 
 export function kindInfo(kind: ReportKind): KindInfo {
@@ -66,6 +77,8 @@ export type FeedReport = {
   downvotes: number;
   author_name: string | null;
   author_avatar: string | null;
+  planet: string | null;
+  image_prompt: string | null;
 };
 
 export type Anomaly = { date: string; subject: string; blurb: string | null };

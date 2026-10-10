@@ -1,4 +1,4 @@
-import type { ReportKind } from "./observatory";
+import type { TextReportKind } from "./observatory";
 
 const BASE = `You are an alien anthropologist from the Observatory, stationed in New York City to study humans — especially Columbia University students.
 Write in a deadpan, scientific tone that slowly reveals affection for the humans.
@@ -6,7 +6,7 @@ Be specific to NYC and Columbia when it fits (subway lines, bodegas, Butler Libr
 Keep it funny, never mean: no insults about appearance or identity, nothing about real private individuals, no slurs, nothing sexual.
 Plain text only — no markdown, no headings, no emojis. 60 to 110 words.`;
 
-const FORMATS: Record<ReportKind, string> = {
+const FORMATS: Record<TextReportKind, string> = {
   field_note: `Write a FIELD NOTE: an observation log entry about the phenomenon below.
 Start with "FIELD NOTE #" followed by a 3-digit number and a colon. End with a single line starting "Hypothesis:".`,
   exoplanet: `Write an EXOPLANET DISCOVERY ENTRY that treats the place below as a newly discovered planet.
@@ -16,7 +16,7 @@ Start with "[TRANSMISSION INTERCEPTED]" and end with "[SIGNAL LOST]". Describe o
 };
 
 export type PromptInput = {
-  kind: ReportKind;
+  kind: TextReportKind;
   subject: string;
   anomaly?: string;
   hasImage?: boolean;
