@@ -33,6 +33,7 @@ type Input = {
   image?: { mimeType: string; base64: string };
   models?: string[];
   fetchImpl?: typeof fetch;
+  json?: boolean;
 };
 
 export async function generateReport({
@@ -42,6 +43,7 @@ export async function generateReport({
   image,
   models = MODELS,
   fetchImpl = fetch,
+  json = false,
 }: Input): Promise<{ text: string; model: string }> {
   const parts: object[] = [{ text: user }];
   if (image) parts.push({ inline_data: { mime_type: image.mimeType, data: image.base64 } });
@@ -49,7 +51,11 @@ export async function generateReport({
   const body = JSON.stringify({
     system_instruction: { parts: [{ text: system }] },
     contents: [{ role: "user", parts }],
-    generationConfig: { temperature: 1, maxOutputTokens: 400 },
+    generationConfig: {
+      temperature: 1,
+      maxOutputTokens: json ? 800 : 400,
+      ...(json ? { responseMimeType: "application/json" } : {}),
+    },
   });
 
   // Healthy models first; recently failed ones stay at the back as a last resort.

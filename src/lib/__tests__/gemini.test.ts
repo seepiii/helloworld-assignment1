@@ -65,4 +65,10 @@ describe("generateReport", () => {
     const r = await generateReport({ ...input, models: ["m1"], fetchImpl: vi.fn().mockResolvedValue(ok("c")) });
     expect(r.model).toBe("m1");
   });
+  it("asks for JSON when json mode is on", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(ok("{}"));
+    await generateReport({ ...input, fetchImpl, models: ["m1"], json: true });
+    const body = JSON.parse(fetchImpl.mock.calls[0][1].body);
+    expect(body.generationConfig.responseMimeType).toBe("application/json");
+  });
 });
