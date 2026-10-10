@@ -89,7 +89,7 @@ export default function HelloWorld({
           href="/observatory"
           className="text-xs tracking-[0.2em] text-[#f4dfa6]/70 uppercase transition hover:text-[#f4dfa6]"
         >
-          ✦ the earth observatory: rate alien reports on nyc &rarr;
+          ✦ the earth observatory: alien reports &amp; postcards from other planets &rarr;
         </Link>
         <Link
           href="/planets"

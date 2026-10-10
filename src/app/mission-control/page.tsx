@@ -11,6 +11,7 @@ import MissionLog from "./MissionLog";
 import LaunchControl from "./LaunchControl";
 import { getTodayAnomaly } from "@/lib/observatory-server";
 import { kindInfo, type FeedReport } from "@/lib/observatory";
+import { DESTINATIONS } from "@/lib/destinations";
 
 // Members-only page. The proxy already bounces signed-out visitors to /login;
 // this check is the authoritative one.
@@ -26,7 +27,7 @@ export default async function MissionControlPage() {
     .returns<Planet[]>();
 
   const anomaly = await getTodayAnomaly(supabase);
-  const [{ data: discovery }, { data: myReports }] = await Promise.all([
+  const [{ data: discovery }, { data: myReports }, { data: stamps }] = await Promise.all([
     anomaly
       ? supabase.from("report_feed").select("*").eq("anomaly_date", anomaly.date)
           .order("score", { ascending: false }).order("created_at", { ascending: true })
@@ -35,7 +36,10 @@ export default async function MissionControlPage() {
     supabase.from("report_feed").select("id, subject, kind, score, created_at")
       .eq("user_id", user.id).order("created_at", { ascending: false }).limit(4)
       .returns<Pick<FeedReport, "id" | "subject" | "kind" | "score" | "created_at">[]>(),
+    supabase.from("reports").select("planet").eq("user_id", user.id).eq("kind", "postcard"),
   ]);
+  // Passport: every planet this user has sent a postcard to.
+  const visited = new Set((stamps ?? []).map((s) => s.planet as string));
 
   const first = profile?.first_name ?? "Commander";
   const fullName = `${profile?.first_name ?? ""} ${profile?.last_name ?? ""}`.trim();
@@ -176,6 +180,47 @@ export default async function MissionControlPage() {
             )}
             <Link href="/observatory" className="mt-auto font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase hover:text-white/70">
               Open the Observatory &rarr;
+            </Link>
+          </HudPanel>
+
+          <HudPanel label="Passport · postcards sent" code={`${visited.size}/${DESTINATIONS.length} visited`} className="lg:col-span-3">
+            <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-9">
+              {DESTINATIONS.map((d) => {
+                const done = visited.has(d.id);
+                return (
+                  <li key={d.id}>
+                    <Link
+                      href={`/observatory/teleport?to=${d.id}`}
+                      title={done ? `You've sent a postcard to ${d.name}` : `Send a postcard to ${d.name}`}
+                      className="group flex flex-col items-center gap-2 text-center"
+                    >
+                      <span
+                        className={`flex h-14 w-14 items-center justify-center rounded-full border-2 font-mono text-[10px] uppercase transition group-hover:scale-105 ${done ? "text-[#050505]" : "border-dashed text-white/30"}`}
+                        style={
+                          done
+                            ? { backgroundColor: d.color, borderColor: d.color, boxShadow: `0 0 18px ${d.color}` }
+                            : { borderColor: "rgba(255,255,255,0.2)" }
+                        }
+                      >
+                        {done ? "✓" : "—"}
+                      </span>
+                      <span className={`font-mono text-[10px] tracking-[0.15em] uppercase ${done ? "text-white" : "text-white/40"}`}>
+                        {d.name}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="text-xs text-white/45">
+              {visited.size === 0
+                ? "No stamps yet. Teleport something to any planet to earn your first one."
+                : visited.size === DESTINATIONS.length
+                  ? "Full passport. The aliens are impressed."
+                  : `Send postcards to ${DESTINATIONS.length - visited.size} more worlds to fill your passport.`}
+            </p>
+            <Link href="/observatory/teleport" className="mt-auto font-mono text-[10px] tracking-[0.25em] text-[#f4dfa6] uppercase hover:text-white">
+              Open the Teleporter &rarr;
             </Link>
           </HudPanel>
 

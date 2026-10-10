@@ -78,9 +78,14 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
             ))}
           </nav>
           {user ? (
-            <Link href="/observatory/new" className="rounded-full bg-[#f4dfa6] px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#1a1408] uppercase hover:bg-white">
-              + New report
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/observatory/teleport" className="rounded-full border border-[#e9c46a]/60 bg-[#e9c46a]/10 px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#f4dfa6] uppercase hover:bg-[#e9c46a]/20">
+                ✉ Teleport
+              </Link>
+              <Link href="/observatory/new" className="rounded-full bg-[#f4dfa6] px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#1a1408] uppercase hover:bg-white">
+                + New report
+              </Link>
+            </div>
           ) : null}
         </div>
 

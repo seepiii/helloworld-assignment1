@@ -23,8 +23,8 @@ export default function HowItWorks() {
   }
 
   const steps = [
-    ["1 · Pick a report", "Field Note (something humans do), Exoplanet (a NYC place), or Transmission (a photo)."],
-    ["2 · Transmit", "Our AI alien researcher writes it up. Every report and the exact prompt are saved."],
+    ["1 · Pick a report", "Field Note (something humans do), Exoplanet (a NYC place), Transmission (a photo), or a Postcard: the Teleporter sends your subject to another planet and an alien artist paints it."],
+    ["2 · Transmit", "Our AI alien researcher writes it up (or paints it). Every report, image, and the exact prompts are saved."],
     ["3 · Vote", "Upvote the reports that make you laugh. The best one on today's anomaly becomes Discovery of the Day."],
   ];
 
