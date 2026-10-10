@@ -25,7 +25,7 @@ export async function getFeed(
   supabase: SupabaseClient,
   { sort, kind, limit = 50 }: { sort: FeedSort; kind?: ReportKind; limit?: number },
 ) {
-  let q = supabase.from("report_feed").select("*");
+  let q = supabase.from("observatory_feed").select("*");
   if (kind) q = q.eq("kind", kind);
   if (sort === "top") {
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
@@ -37,7 +37,7 @@ export async function getFeed(
 }
 
 export async function getReport(supabase: SupabaseClient, id: string) {
-  return supabase.from("report_feed").select("*").eq("id", id).maybeSingle<FeedReport>();
+  return supabase.from("observatory_feed").select("*").eq("id", id).maybeSingle<FeedReport>();
 }
 
 /** The signed-in user's votes on the given reports, as { reportId: -1 | 1 }. */

@@ -29,11 +29,11 @@ export default async function MissionControlPage() {
   const anomaly = await getTodayAnomaly(supabase);
   const [{ data: discovery }, { data: myReports }, { data: stamps }] = await Promise.all([
     anomaly
-      ? supabase.from("report_feed").select("*").eq("anomaly_date", anomaly.date)
+      ? supabase.from("observatory_feed").select("*").eq("anomaly_date", anomaly.date)
           .order("score", { ascending: false }).order("created_at", { ascending: true })
           .limit(1).maybeSingle<FeedReport>()
       : Promise.resolve({ data: null }),
-    supabase.from("report_feed").select("id, subject, kind, score, created_at")
+    supabase.from("observatory_feed").select("id, subject, kind, score, created_at")
       .eq("user_id", user.id).order("created_at", { ascending: false }).limit(4)
       .returns<Pick<FeedReport, "id" | "subject" | "kind" | "score" | "created_at">[]>(),
     supabase.from("reports").select("planet").eq("user_id", user.id).eq("kind", "postcard"),

@@ -26,7 +26,7 @@ export async function castVote(reportId: string, clicked: 1 | -1) {
   if (error) return { error: error.message };
 
   const { data: row } = await supabase
-    .from("report_feed")
+    .from("observatory_feed")
     .select("score")
     .eq("id", reportId)
     .single<{ score: number }>();
