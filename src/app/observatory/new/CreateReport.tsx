@@ -88,8 +88,18 @@ export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: A
 
   return (
     <form onSubmit={transmit} className="flex flex-col gap-5">
-      <fieldset className="grid gap-3 sm:grid-cols-3">
+      <fieldset className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <legend className="mb-2 font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">1 · Report type</legend>
+        <Link
+          href="/observatory/teleport"
+          className="hud-panel cta-glow flex flex-col gap-1.5 border-dashed border-[#e9c46a]/70 p-4 transition hover:bg-[#e9c46a]/10"
+        >
+          <span className="font-mono text-[9px] tracking-[0.25em] text-[#f4dfa6] uppercase">New · with an image</span>
+          <span className="text-base font-bold text-white">✉ Postcard</span>
+          <span className="text-xs text-white/70">Pick a planet. The alien artist paints your subject there.</span>
+          <span className="text-xs text-white/40 italic">e.g. “my dorm room” → Saturn</span>
+          <span className="mt-auto pt-1 font-mono text-[10px] tracking-[0.15em] text-[#f4dfa6] uppercase">Open the Teleporter →</span>
+        </Link>
         {KINDS.filter((k) => k.id !== "postcard").map((k) => (
           <label key={k.id} className={`hud-panel flex cursor-pointer flex-col gap-1.5 p-4 transition ${kind === k.id ? "border-[#e9c46a]/60 bg-[#e9c46a]/10" : "hover:bg-white/5"}`}>
             <input type="radio" name="kind" value={k.id} checked={kind === k.id} onChange={() => setKind(k.id)} className="sr-only" />
@@ -100,14 +110,6 @@ export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: A
           </label>
         ))}
       </fieldset>
-
-      <Link href="/observatory/teleport" className="hud-panel flex items-center justify-between gap-4 p-4 hover:bg-white/5">
-        <span className="flex flex-col gap-1">
-          <span className="text-base font-bold text-white">✉ Want a picture instead? Send a Postcard</span>
-          <span className="text-xs text-white/60">The Teleporter sends your subject to another planet and the alien artist paints it.</span>
-        </span>
-        <span className="font-mono text-xs tracking-[0.2em] text-[#f4dfa6] uppercase">Teleporter →</span>
-      </Link>
 
       <div className="hud-panel flex flex-col gap-4 p-5">
         <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">2 · What should the alien study?</span>

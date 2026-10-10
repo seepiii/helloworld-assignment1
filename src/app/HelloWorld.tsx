@@ -86,10 +86,16 @@ export default function HelloWorld({
           </p>
         )}
         <Link
+          href={signedIn ? "/observatory/teleport" : "/login"}
+          className="rounded-full bg-[#f4dfa6] px-8 py-3.5 text-sm font-bold tracking-[0.25em] text-[#1a1408] uppercase shadow-[0_0_30px_rgba(244,223,166,0.35)] transition hover:bg-white"
+        >
+          ✉ Send a postcard from another planet &rarr;
+        </Link>
+        <Link
           href="/observatory"
           className="text-xs tracking-[0.2em] text-[#f4dfa6]/70 uppercase transition hover:text-[#f4dfa6]"
         >
-          ✦ the earth observatory: alien reports &amp; postcards from other planets &rarr;
+          ✦ the earth observatory: vote on alien reports &amp; postcards &rarr;
         </Link>
         <Link
           href="/planets"

@@ -4,6 +4,7 @@ import { getUserAndProfile } from "@/lib/supabase-server";
 import { KINDS, isReportKind } from "@/lib/observatory";
 import { getFeed, getMyVotes, getTodayAnomaly, type FeedSort } from "@/lib/observatory-server";
 import HowItWorks from "./HowItWorks";
+import TeleporterBanner from "./TeleporterBanner";
 import ReportCard from "./ReportCard";
 
 const SORTS: { id: FeedSort; label: string }[] = [
@@ -53,6 +54,8 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
           </p>
         </div>
 
+        <TeleporterBanner signedIn={!!user} />
+
         <HowItWorks />
 
         {anomaly && (
@@ -79,11 +82,11 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
           </nav>
           {user ? (
             <div className="flex flex-wrap gap-2">
-              <Link href="/observatory/teleport" className="rounded-full border border-[#e9c46a]/60 bg-[#e9c46a]/10 px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#f4dfa6] uppercase hover:bg-[#e9c46a]/20">
+              <Link href="/observatory/teleport" className="rounded-full bg-[#f4dfa6] px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#1a1408] uppercase hover:bg-white">
                 ✉ Teleport
               </Link>
-              <Link href="/observatory/new" className="rounded-full bg-[#f4dfa6] px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#1a1408] uppercase hover:bg-white">
-                + New report
+              <Link href="/observatory/new" className="rounded-full border border-[#e9c46a]/60 bg-[#e9c46a]/10 px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#f4dfa6] uppercase hover:bg-[#e9c46a]/20">
+                + Written report
               </Link>
             </div>
           ) : null}
