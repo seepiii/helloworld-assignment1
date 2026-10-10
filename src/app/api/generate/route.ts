@@ -4,15 +4,9 @@ import { isReportKind } from "@/lib/observatory";
 import { buildPrompt, splitTitle } from "@/lib/prompts";
 import { generateReport, GenerationError } from "@/lib/gemini";
 import { getTodayAnomaly } from "@/lib/observatory-server";
+import { fail, overHourlyLimit, RATE_LIMIT_MESSAGE, readImage, uploadReportImage } from "@/lib/report-guard";
 
 export const maxDuration = 60;
-
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
-const HOURLY_LIMIT = 10;
-
-function fail(status: number, error: string) {
-  return NextResponse.json({ error }, { status });
-}
 
 export async function POST(request: Request) {
   const supabase = await createSupabaseServer();
@@ -25,30 +19,19 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const kind = form.get("kind");
   if (!isReportKind(kind)) return fail(400, "Pick a report type.");
+  if (kind === "postcard") return fail(400, "Postcards are sent from the Teleporter.");
 
   const useAnomaly = form.get("useAnomaly") === "true";
   let subject = String(form.get("subject") ?? "").trim().slice(0, 140);
-  const file = form.get("image");
-  const image = file instanceof File && file.size > 0 ? file : null;
-
-  if (image && !image.type.startsWith("image/")) return fail(400, "That file isn't an image.");
-  if (image && image.size > MAX_IMAGE_BYTES) return fail(400, "Photos must be under 4 MB.");
+  const { image, error: imageError } = readImage(form);
+  if (imageError) return fail(400, imageError);
   if (kind === "transmission" && !image) return fail(400, "Transmissions need a photo.");
 
   const anomaly = useAnomaly ? await getTodayAnomaly(supabase) : null;
   if (!subject && anomaly) subject = anomaly.subject;
   if (!subject && !image) return fail(400, "Tell the Observatory what to study, or add a photo.");
 
-  // Rate limit: protects the free Gemini quota.
-  const since = new Date(Date.now() - 3600 * 1000).toISOString();
-  const { count } = await supabase
-    .from("reports")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .gte("created_at", since);
-  if ((count ?? 0) >= HOURLY_LIMIT) {
-    return fail(429, "Signal jammed — you've sent 10 reports this hour. Try again later.");
-  }
+  if (await overHourlyLimit(supabase, user.id)) return fail(429, RATE_LIMIT_MESSAGE);
 
   const prompt = buildPrompt({ kind, subject, anomaly: anomaly?.subject, hasImage: !!image });
   const bytes = image ? Buffer.from(await image.arrayBuffer()) : null;
@@ -77,13 +60,9 @@ export async function POST(request: Request) {
   // Upload only after a successful generation, so failed attempts leave nothing behind.
   let imageUrl: string | null = null;
   if (bytes && image) {
-    const ext = image.type === "image/png" ? "png" : image.type === "image/webp" ? "webp" : "jpg";
-    const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage
-      .from("reports")
-      .upload(path, bytes, { contentType: image.type });
-    if (error) return fail(500, `Photo upload failed: ${error.message}`);
-    imageUrl = supabase.storage.from("reports").getPublicUrl(path).data.publicUrl;
+    const upload = await uploadReportImage(supabase, user.id, bytes, image.type);
+    if ("error" in upload) return fail(500, `Photo upload failed: ${upload.error}`);
+    imageUrl = upload.url;
   }
 
   const { data: report, error } = await supabase
