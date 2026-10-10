@@ -53,7 +53,10 @@ export async function generateReport({
     contents: [{ role: "user", parts }],
     generationConfig: {
       temperature: 1,
-      maxOutputTokens: json ? 800 : 400,
+      // Thinking models spend output tokens on reasoning, so keep it low and leave headroom;
+      // the prompts themselves cap the reply length.
+      thinkingConfig: { thinkingLevel: "low" },
+      maxOutputTokens: 2048,
       ...(json ? { responseMimeType: "application/json" } : {}),
     },
   });

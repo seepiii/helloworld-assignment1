@@ -71,4 +71,13 @@ describe("generateReport", () => {
     const body = JSON.parse(fetchImpl.mock.calls[0][1].body);
     expect(body.generationConfig.responseMimeType).toBe("application/json");
   });
+
+  it("keeps thinking low and leaves room for the answer", async () => {
+    // Thinking models spend output tokens on reasoning; a small cap truncated replies mid-JSON.
+    const fetchImpl = vi.fn().mockResolvedValue(ok("x"));
+    await generateReport({ ...input, fetchImpl, models: ["m1"] });
+    const cfg = JSON.parse(fetchImpl.mock.calls[0][1].body).generationConfig;
+    expect(cfg.thinkingConfig).toEqual({ thinkingLevel: "low" });
+    expect(cfg.maxOutputTokens).toBeGreaterThanOrEqual(2048);
+  });
 });
