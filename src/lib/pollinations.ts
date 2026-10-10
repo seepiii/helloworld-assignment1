@@ -9,17 +9,16 @@ export function pollinationsUrl(prompt: string, seed: number) {
   return `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?${params}`;
 }
 
-export async function renderImage(
-  prompt: string,
-  {
-    seed = Math.floor(Math.random() * 1_000_000_000),
-    fetchImpl = fetch,
-    timeoutMs = 45_000,
-  }: { seed?: number; fetchImpl?: typeof fetch; timeoutMs?: number } = {},
-) {
+// The anonymous tier rate-limits bursts (HTTP 402/429), so retry with growing waits.
+const RETRY_DELAYS_MS = [4_000, 8_000, 12_000];
+const DEADLINE_MS = 40_000;
+
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+async function attempt(url: string, fetchImpl: typeof fetch, timeoutMs: number) {
   let res: Response;
   try {
-    res = await fetchImpl(pollinationsUrl(prompt, seed), { signal: AbortSignal.timeout(timeoutMs) });
+    res = await fetchImpl(url, { signal: AbortSignal.timeout(timeoutMs) });
   } catch {
     throw new RenderError("Image service timed out");
   }
@@ -29,5 +28,33 @@ export async function renderImage(
   }
   const bytes = Buffer.from(await res.arrayBuffer());
   if (bytes.length < 1000) throw new RenderError("Image was empty");
-  return { bytes, contentType: type.split(";")[0].trim(), seed };
+  return { bytes, contentType: type.split(";")[0].trim() };
+}
+
+export async function renderImage(
+  prompt: string,
+  {
+    seed = Math.floor(Math.random() * 1_000_000_000),
+    fetchImpl = fetch,
+    sleep = wait,
+  }: { seed?: number; fetchImpl?: typeof fetch; sleep?: (ms: number) => Promise<void> } = {},
+) {
+  const url = pollinationsUrl(prompt, seed);
+  const deadline = Date.now() + DEADLINE_MS;
+  let lastError: unknown;
+
+  for (let i = 0; i <= RETRY_DELAYS_MS.length; i++) {
+    if (i > 0) {
+      const delay = RETRY_DELAYS_MS[i - 1];
+      if (Date.now() + delay >= deadline) break;
+      await sleep(delay);
+    }
+    try {
+      const image = await attempt(url, fetchImpl, Math.max(1_000, deadline - Date.now()));
+      return { ...image, seed };
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError instanceof RenderError ? lastError : new RenderError("Image service unavailable");
 }

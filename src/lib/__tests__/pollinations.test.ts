@@ -20,10 +20,27 @@ describe("renderImage", () => {
   });
   it("rejects non-image responses", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(new Response("oops", { headers: { "content-type": "text/html" } }));
-    await expect(renderImage("x", { fetchImpl })).rejects.toBeInstanceOf(RenderError);
+    await expect(renderImage("x", { fetchImpl, sleep: async () => {} })).rejects.toBeInstanceOf(RenderError);
   });
   it("turns timeouts into RenderError", async () => {
     const fetchImpl = vi.fn().mockRejectedValue(new Error("timeout"));
-    await expect(renderImage("x", { fetchImpl })).rejects.toBeInstanceOf(RenderError);
+    await expect(renderImage("x", { fetchImpl, sleep: async () => {} })).rejects.toBeInstanceOf(RenderError);
+  });
+
+  it("retries when the free tier is rate limited (402/429)", async () => {
+    const limited = () => new Response("{}", { status: 402, headers: { "content-type": "application/json" } });
+    const fetchImpl = vi.fn().mockResolvedValueOnce(limited()).mockResolvedValueOnce(limited()).mockResolvedValueOnce(jpeg());
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    const r = await renderImage("x", { fetchImpl, sleep });
+    expect(r.bytes.length).toBe(5000);
+    expect(fetchImpl).toHaveBeenCalledTimes(3);
+    expect(sleep).toHaveBeenCalledTimes(2);
+  });
+
+  it("gives up after its retries", async () => {
+    const fetchImpl = vi.fn().mockImplementation(async () => new Response("{}", { status: 402 }));
+    const sleep = vi.fn().mockResolvedValue(undefined);
+    await expect(renderImage("x", { fetchImpl, sleep })).rejects.toBeInstanceOf(RenderError);
+    expect(fetchImpl).toHaveBeenCalledTimes(4);
   });
 });
