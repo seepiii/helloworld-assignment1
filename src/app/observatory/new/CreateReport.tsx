@@ -3,21 +3,9 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { KINDS, kindInfo, type Anomaly, type ReportKind } from "@/lib/observatory";
+import { shrink } from "@/lib/shrink-image";
 
 type Result = { id: string; body: string; model: string; imageUrl: string | null; subject: string };
-
-// Shrink photos in the browser: faster uploads and under Vercel's 4.5 MB request limit.
-async function shrink(file: File): Promise<Blob> {
-  const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.round(bitmap.width * scale);
-  canvas.height = Math.round(bitmap.height * scale);
-  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Couldn't read image"))), "image/jpeg", 0.85),
-  );
-}
 
 export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: Anomaly | null; startWithAnomaly: boolean }) {
   const [kind, setKind] = useState<ReportKind>("field_note");
@@ -102,7 +90,7 @@ export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: A
     <form onSubmit={transmit} className="flex flex-col gap-5">
       <fieldset className="grid gap-3 sm:grid-cols-3">
         <legend className="mb-2 font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">1 · Report type</legend>
-        {KINDS.map((k) => (
+        {KINDS.filter((k) => k.id !== "postcard").map((k) => (
           <label key={k.id} className={`hud-panel flex cursor-pointer flex-col gap-1.5 p-4 transition ${kind === k.id ? "border-[#e9c46a]/60 bg-[#e9c46a]/10" : "hover:bg-white/5"}`}>
             <input type="radio" name="kind" value={k.id} checked={kind === k.id} onChange={() => setKind(k.id)} className="sr-only" />
             <span className="text-base font-bold text-white">{k.icon} {k.label}</span>
@@ -112,6 +100,14 @@ export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: A
           </label>
         ))}
       </fieldset>
+
+      <Link href="/observatory/teleport" className="hud-panel flex items-center justify-between gap-4 p-4 hover:bg-white/5">
+        <span className="flex flex-col gap-1">
+          <span className="text-base font-bold text-white">✉ Want a picture instead? Send a Postcard</span>
+          <span className="text-xs text-white/60">The Teleporter sends your subject to another planet and the alien artist paints it.</span>
+        </span>
+        <span className="font-mono text-xs tracking-[0.2em] text-[#f4dfa6] uppercase">Teleporter →</span>
+      </Link>
 
       <div className="hud-panel flex flex-col gap-4 p-5">
         <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">2 · What should the alien study?</span>
