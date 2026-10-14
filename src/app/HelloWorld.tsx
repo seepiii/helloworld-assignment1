@@ -87,10 +87,15 @@ export default function HelloWorld({
         )}
         <Link
           href="/observatory"
-          className="text-xs tracking-[0.2em] text-[#f4dfa6]/70 uppercase transition hover:text-[#f4dfa6]"
+          className="rounded-full border border-white/25 px-8 py-3 text-sm font-bold tracking-[0.25em] text-white/85 uppercase transition hover:border-white/50 hover:bg-white/5 hover:text-white"
         >
-          ✦ the earth observatory: make &amp; vote on alien reports and postcards &rarr;
+          ✦ Explore the Earth Observatory &rarr;
         </Link>
+        <p className="-mt-2 text-xs tracking-[0.15em] text-white/40">
+          {signedIn
+            ? "make & vote on alien reports and postcards"
+            : "open to everyone · sign in to post & vote"}
+        </p>
         <Link
           href="/planets"
           className="text-xs tracking-[0.2em] text-white/30 uppercase transition hover:text-white/60"

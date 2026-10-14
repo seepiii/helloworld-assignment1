@@ -79,7 +79,12 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
               </Link>
             ))}
           </div>
-          {!user && <p className="text-xs text-white/40">Sign in with Google to create and vote.</p>}
+          {!user && (
+            <p className="text-xs text-white/50">
+              You&apos;re browsing as a guest: anyone can read and see the rankings.{" "}
+              <Link href="/login" className="text-[#f4dfa6] underline-offset-4 hover:underline">Sign in with Google</Link> to create and vote.
+            </p>
+          )}
         </section>
 
         <HowItWorks />
