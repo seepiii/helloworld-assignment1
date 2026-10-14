@@ -125,7 +125,7 @@ export default async function MissionControlPage() {
           </HudPanel>
 
           {/* Systems */}
-          <HudPanel label="Systems status" hint="Live checks that your sign-in and the database are working.">
+          <HudPanel label="Systems status" hint="Live checks that your sign-in and the database are working." code="SYS-05">
             <ul className="flex flex-col gap-2.5 font-mono text-sm">
               {systems.map((s) => (
                 <li key={s.name} className="flex items-center justify-between gap-3">
@@ -140,13 +140,13 @@ export default async function MissionControlPage() {
           </HudPanel>
 
           {/* Launch */}
-          <HudPanel label="Launch pad" hint="Just for fun: press the button for a countdown and liftoff.">
+          <HudPanel label="Launch pad 39A" hint="Just for fun: press the button for a countdown and liftoff." code="GO/NO-GO">
             <LaunchControl name={first} />
           </HudPanel>
 
           <HudPanel label="Discovery of the day" hint="The top-voted report about today's anomaly (a daily topic everyone writes about)." code={anomaly ? anomaly.date : undefined} className="lg:col-span-2">
             {anomaly && (
-              <p className="text-sm text-white/60">
+              <p className="font-mono text-sm text-white/60">
                 Today&apos;s anomaly: <span className="text-white">{anomaly.subject}</span>
               </p>
             )}
@@ -158,25 +158,25 @@ export default async function MissionControlPage() {
                 </p>
               </Link>
             ) : (
-              <p className="text-sm text-white/50">No one has investigated today&apos;s anomaly yet. Be the first.</p>
+              <p className="font-mono text-sm text-white/55">No one has investigated today&apos;s anomaly yet. Be the first.</p>
             )}
             <Link href="/observatory/new?anomaly=1" className="mt-auto font-mono text-xs tracking-[0.2em] text-[#f4dfa6] uppercase hover:text-white">
               Investigate the anomaly &rarr;
             </Link>
           </HudPanel>
 
-          <HudPanel label="My reports" hint="Your latest reports and postcards, with their vote scores.">
+          <HudPanel label="My reports" hint="Your latest reports and postcards, with their vote scores." code={`${myReports?.length ?? 0} recent`}>
             {myReports && myReports.length > 0 ? (
-              <ul className="flex flex-col gap-2.5 text-sm">
+              <ul className="flex flex-col gap-2.5 font-mono text-sm">
                 {myReports.map((r) => (
                   <li key={r.id} className="flex justify-between gap-3">
                     <Link href={`/observatory/${r.id}`} className="truncate text-white/80 hover:text-white">{kindInfo(r.kind).icon} {r.subject}</Link>
-                    <span className="shrink-0 font-mono text-white/60 tabular-nums">{r.score > 0 ? `+${r.score}` : r.score}</span>
+                    <span className="shrink-0 text-white/60 tabular-nums">{r.score > 0 ? `+${r.score}` : r.score}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-white/50">You haven&apos;t filed any reports yet.</p>
+              <p className="font-mono text-sm text-white/55">You haven&apos;t filed any reports yet.</p>
             )}
             <Link href="/observatory" className="mt-auto font-mono text-xs tracking-[0.2em] text-white/55 uppercase hover:text-white">
               Open the Observatory &rarr;
@@ -212,7 +212,7 @@ export default async function MissionControlPage() {
                 );
               })}
             </ul>
-            <p className="text-sm text-white/60">
+            <p className="font-mono text-sm text-white/60">
               {visited.size === 0
                 ? "No stamps yet. Teleport something to any planet to earn your first one."
                 : visited.size === DESTINATIONS.length
@@ -225,7 +225,7 @@ export default async function MissionControlPage() {
           </HudPanel>
 
           {/* Orbit map */}
-          <HudPanel label="Solar system map" hint="The planets circling the Sun, with each one's distance from it." className="lg:col-span-2">
+          <HudPanel label="Solar system map" hint="The planets circling the Sun, with each one's distance from it." code="LIVE" className="lg:col-span-2">
             {planets && planets.length > 0 ? (
               <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_auto]">
                 <OrbitTracker planets={planets} />
@@ -246,13 +246,13 @@ export default async function MissionControlPage() {
           </HudPanel>
 
           {/* Mission log */}
-          <HudPanel label="Mission log" hint="What happened behind the scenes when you signed in.">
+          <HudPanel label="Mission log" hint="What happened behind the scenes when you signed in." code="REC">
             <MissionLog lines={log} />
           </HudPanel>
 
           {/* Gravity */}
           {planets && planets.length > 0 && (
-            <HudPanel label="Your weight on each planet" hint="Drag the slider to your Earth weight to see what you'd weigh elsewhere." className="lg:col-span-3">
+            <HudPanel label="Your weight on each planet" hint="Drag the slider to your Earth weight to see what you'd weigh elsewhere." code="GRV" className="lg:col-span-3">
               <GravityConsole planets={planets} />
             </HudPanel>
           )}
