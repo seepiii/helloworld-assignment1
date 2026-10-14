@@ -8,10 +8,10 @@ import ReportCard from "./ReportCard";
 
 // Every way to add something to the rankings, in one place.
 const CREATE = [
-  { label: "✉ Postcard", hint: "Your subject, painted on another planet", href: "/observatory/teleport", featured: true },
-  { label: "◎ Field Note", hint: "Something humans do", href: "/observatory/new?kind=field_note" },
-  { label: "◐ Exoplanet", hint: "A NYC place as a planet", href: "/observatory/new?kind=exoplanet" },
-  { label: "◉ Transmission", hint: "A photo, radioed home", href: "/observatory/new?kind=transmission" },
+  { label: "✉ Postcard", hint: "The alien paints your subject on a planet it's visited", href: "/observatory/teleport", featured: true },
+  { label: "◎ Field Note", hint: "The alien's take on something people do", href: "/observatory/new?kind=field_note" },
+  { label: "◐ Exoplanet", hint: "The alien mistakes a NYC place for a planet", href: "/observatory/new?kind=exoplanet" },
+  { label: "◉ Transmission", hint: "The alien's take on your photo", href: "/observatory/new?kind=transmission" },
 ];
 
 const SORTS: { id: FeedSort; label: string }[] = [

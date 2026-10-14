@@ -98,7 +98,7 @@ export default function CreateReport({
         >
           <span className="font-mono text-[9px] tracking-[0.25em] text-[#f4dfa6] uppercase">New · with an image</span>
           <span className="text-base font-bold text-white">✉ Postcard</span>
-          <span className="text-xs text-white/70">Pick a planet. The alien artist paints your subject there.</span>
+          <span className="text-xs text-white/70">{kindInfo("postcard").blurb}</span>
           <span className="text-xs text-white/40 italic">e.g. “my dorm room” → Saturn</span>
           <span className="mt-auto pt-1 font-mono text-[10px] tracking-[0.15em] text-[#f4dfa6] uppercase">Open the Teleporter →</span>
         </Link>

@@ -24,8 +24,8 @@ export default async function NewReportPage({ searchParams }: PageProps<"/observ
           <p className="font-mono text-[10px] tracking-[0.3em] text-[#7ee2a8] uppercase">New report · Agent {profile?.first_name}</p>
           <h1 className="text-3xl font-bold text-white">File a report</h1>
           <p className="text-sm text-white/60">
-            Choose what kind of report to file, tell the alien researcher what to study, and hit Transmit.
-            Gemini writes it; it&apos;s saved with the exact prompt and posted to the Observatory for voting.
+            Pick a report type, tell the alien what to look at, and hit Transmit. The alien (Gemini) writes its
+            interpretation, which is saved with the exact prompt and posted to the Observatory for voting.
           </p>
         </div>
         <CreateReport anomaly={anomaly} startWithAnomaly={fromAnomaly === "1"} initialKind={initialKind} />

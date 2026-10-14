@@ -34,9 +34,9 @@ export default async function TeleportPage({ searchParams }: PageProps<"/observa
             Send a postcard from the solar system
           </h1>
           <p className="text-sm text-white/60">
-            Pick a planet, tell the aliens what to teleport there (or upload a photo), and their artist paints it on arrival.
-            The painting and a postcard note using that planet&apos;s real gravity are posted to the Observatory for voting.
-            Every planet you visit earns a stamp in your passport on Mission Control.
+            The alien has visited every planet below. Pick one, then describe something or upload a photo, and the alien
+            paints its rendition of your subject on that planet, plus a postcard note using the planet&apos;s real gravity.
+            It&apos;s posted to the Observatory for voting, and every planet you send to earns a stamp in your passport on Mission Control.
           </p>
         </div>
         <Teleporter destinations={destinations} anomaly={anomaly} initialDestination={typeof to === "string" ? to : undefined} />

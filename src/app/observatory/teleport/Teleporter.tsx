@@ -109,7 +109,7 @@ export default function Teleporter({
   return (
     <form onSubmit={teleport} className="flex flex-col gap-5">
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-2 font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">1 · Destination</legend>
+        <legend className="mb-2 font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">1 · Pick a planet the alien has visited</legend>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {destinations.map((d) => (
             <label key={d.id} className={`hud-panel flex cursor-pointer flex-col gap-1 p-4 transition ${dest === d.id ? "border-[#e9c46a]/60 bg-[#e9c46a]/10" : "hover:bg-white/5"}`}>
