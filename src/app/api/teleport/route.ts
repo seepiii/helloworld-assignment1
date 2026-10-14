@@ -49,8 +49,9 @@ export async function POST(request: Request) {
   const prompt = buildPostcardPrompt({
     subject, destination, facts, anomaly: anomaly?.subject, hasImage: !!image,
   });
-  const photo = image
-    ? { mimeType: image.type, base64: Buffer.from(await image.arrayBuffer()).toString("base64") }
+  const photoBytes = image ? Buffer.from(await image.arrayBuffer()) : null;
+  const photo = image && photoBytes
+    ? { mimeType: image.type, base64: photoBytes.toString("base64") }
     : undefined;
 
   let written;
@@ -75,6 +76,14 @@ export async function POST(request: Request) {
   const upload = await uploadReportImage(supabase, user.id, rendered.bytes, rendered.contentType);
   if ("error" in upload) return fail(500, `Couldn't store the rendition: ${upload.error}`);
 
+  // Keep the user's own photo too, so the postcard can show what was sent.
+  let sourceImageUrl: string | null = null;
+  if (image && photoBytes) {
+    const source = await uploadReportImage(supabase, user.id, photoBytes, image.type);
+    if ("error" in source) return fail(500, `Couldn't store your photo: ${source.error}`);
+    sourceImageUrl = source.url;
+  }
+
   const title = postcard.title || subject || `Postcard from ${destination.name}`;
   const { data: report, error } = await supabase
     .from("reports")
@@ -89,6 +98,8 @@ export async function POST(request: Request) {
       image_url: upload.url,
       planet: destination.id,
       anomaly_date: anomaly?.date ?? null,
+      user_prompt: subject || null,
+      source_image_url: sourceImageUrl,
     })
     .select("id")
     .single();
@@ -101,5 +112,7 @@ export async function POST(request: Request) {
     imageUrl: upload.url,
     destination: destination.id,
     gravity: facts.gravity,
+    userPrompt: subject || null,
+    sourceImageUrl,
   });
 }

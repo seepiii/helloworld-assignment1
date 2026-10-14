@@ -5,8 +5,18 @@ import { useEffect, useRef, useState } from "react";
 import type { Destination } from "@/lib/destinations";
 import type { Anomaly } from "@/lib/observatory";
 import { shrink } from "@/lib/shrink-image";
+import OriginalPrompt from "../OriginalPrompt";
 
-type Result = { id: string; title: string; caption: string; imageUrl: string; destination: string; gravity: number };
+type Result = {
+  id: string;
+  title: string;
+  caption: string;
+  imageUrl: string;
+  destination: string;
+  gravity: number;
+  userPrompt: string | null;
+  sourceImageUrl: string | null;
+};
 
 const STAGES = ["Folding space…", "Teleporting your subject…", "The alien artist is painting…", "Adding finishing tentacle-strokes…"];
 
@@ -77,6 +87,7 @@ export default function Teleporter({
           ✉ Postcard received from {where.name} · {result.gravity}× Earth gravity
         </span>
         <h2 className="text-2xl font-bold text-white">{result.title}</h2>
+        <OriginalPrompt text={result.userPrompt} photoUrl={result.sourceImageUrl} destination={where.name} />
         <figure className="flex flex-col gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={result.imageUrl} alt={`Alien artist's rendition: ${result.title}`} className="w-full rounded-lg border border-white/10" />

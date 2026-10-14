@@ -7,8 +7,10 @@ import { shrink } from "@/lib/shrink-image";
 
 type Result = { id: string; body: string; model: string; imageUrl: string | null; subject: string };
 
-export default function CreateReport({ anomaly, startWithAnomaly }: { anomaly: Anomaly | null; startWithAnomaly: boolean }) {
-  const [kind, setKind] = useState<ReportKind>("field_note");
+export default function CreateReport({
+  anomaly, startWithAnomaly, initialKind = "field_note",
+}: { anomaly: Anomaly | null; startWithAnomaly: boolean; initialKind?: ReportKind }) {
+  const [kind, setKind] = useState<ReportKind>(initialKind);
   const [useAnomaly, setUseAnomaly] = useState(startWithAnomaly && !!anomaly);
   const [subject, setSubject] = useState(startWithAnomaly && anomaly ? anomaly.subject : "");
   const [photo, setPhoto] = useState<File | null>(null);

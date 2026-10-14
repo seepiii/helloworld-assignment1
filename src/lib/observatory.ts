@@ -79,6 +79,8 @@ export type FeedReport = {
   author_avatar: string | null;
   planet: string | null;
   image_prompt: string | null;
+  user_prompt: string | null;
+  source_image_url: string | null;
 };
 
 export type Anomaly = { date: string; subject: string; blurb: string | null };

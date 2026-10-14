@@ -4,6 +4,7 @@ import { getUserAndProfile } from "@/lib/supabase-server";
 import { needsName } from "@/lib/supabase";
 import { getTodayAnomaly } from "@/lib/observatory-server";
 import CreateReport from "./CreateReport";
+import { isReportKind } from "@/lib/observatory";
 
 export const maxDuration = 60;
 
@@ -12,7 +13,8 @@ export default async function NewReportPage({ searchParams }: PageProps<"/observ
   if (!user) redirect("/login");
   if (needsName(profile)) redirect("/welcome");
   const anomaly = await getTodayAnomaly(supabase);
-  const { anomaly: fromAnomaly } = await searchParams;
+  const { anomaly: fromAnomaly, kind } = await searchParams;
+  const initialKind = isReportKind(kind) && kind !== "postcard" ? kind : "field_note";
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050505] px-4 pt-20 pb-12 sm:px-8">
@@ -26,7 +28,7 @@ export default async function NewReportPage({ searchParams }: PageProps<"/observ
             Gemini writes it; it&apos;s saved with the exact prompt and posted to the Observatory for voting.
           </p>
         </div>
-        <CreateReport anomaly={anomaly} startWithAnomaly={fromAnomaly === "1"} />
+        <CreateReport anomaly={anomaly} startWithAnomaly={fromAnomaly === "1"} initialKind={initialKind} />
       </div>
     </main>
   );

@@ -4,18 +4,25 @@ import { getUserAndProfile } from "@/lib/supabase-server";
 import { KINDS, isReportKind } from "@/lib/observatory";
 import { getFeed, getMyVotes, getTodayAnomaly, type FeedSort } from "@/lib/observatory-server";
 import HowItWorks from "./HowItWorks";
-import TeleporterBanner from "./TeleporterBanner";
 import ReportCard from "./ReportCard";
 
+// Every way to add something to the rankings, in one place.
+const CREATE = [
+  { label: "✉ Postcard", hint: "Your subject, painted on another planet", href: "/observatory/teleport", featured: true },
+  { label: "◎ Field Note", hint: "Something humans do", href: "/observatory/new?kind=field_note" },
+  { label: "◐ Exoplanet", hint: "A NYC place as a planet", href: "/observatory/new?kind=exoplanet" },
+  { label: "◉ Transmission", hint: "A photo, radioed home", href: "/observatory/new?kind=transmission" },
+];
+
 const SORTS: { id: FeedSort; label: string }[] = [
+  { id: "all", label: "All-time" },
   { id: "top", label: "Today's top" },
   { id: "new", label: "New" },
-  { id: "all", label: "All-time" },
 ];
 
 export default async function ObservatoryPage({ searchParams }: PageProps<"/observatory">) {
   const params = await searchParams;
-  const sort = (SORTS.find((s) => s.id === params.sort)?.id ?? "top") as FeedSort;
+  const sort = (SORTS.find((s) => s.id === params.sort)?.id ?? "all") as FeedSort;
   const kind = isReportKind(params.kind) ? params.kind : undefined;
 
   const { supabase, user } = await getUserAndProfile();
@@ -29,7 +36,7 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
     const q = new URLSearchParams();
     const s = next.sort ?? sort;
     const k = next.kind === null ? undefined : (next.kind ?? kind);
-    if (s !== "top") q.set("sort", s);
+    if (s !== "all") q.set("sort", s);
     if (k) q.set("kind", k);
     const str = q.toString();
     return `/observatory${str ? `?${str}` : ""}`;
@@ -54,7 +61,26 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
           </p>
         </div>
 
-        <TeleporterBanner signedIn={!!user} />
+        <section className="hud-panel flex flex-col gap-3 p-5">
+          <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">Create · everything lands in the rankings below</span>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {CREATE.map((c) => (
+              <Link
+                key={c.label}
+                href={user ? c.href : "/login"}
+                className={`flex flex-col gap-0.5 rounded-lg border px-3 py-2.5 transition ${
+                  c.featured
+                    ? "border-[#e9c46a]/60 bg-[#e9c46a]/15 hover:bg-[#e9c46a]/25"
+                    : "border-white/10 bg-black/20 hover:border-white/30"
+                }`}
+              >
+                <span className={`text-sm font-bold ${c.featured ? "text-[#f4dfa6]" : "text-white"}`}>{c.label}</span>
+                <span className="text-[11px] leading-snug text-white/50">{c.hint}</span>
+              </Link>
+            ))}
+          </div>
+          {!user && <p className="text-xs text-white/40">Sign in with Google to create and vote.</p>}
+        </section>
 
         <HowItWorks />
 
@@ -80,16 +106,6 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
               <Link key={s.id} href={href({ sort: s.id })} className={tab(s.id === sort)}>{s.label}</Link>
             ))}
           </nav>
-          {user ? (
-            <div className="flex flex-wrap gap-2">
-              <Link href="/observatory/teleport" className="rounded-full bg-[#f4dfa6] px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#1a1408] uppercase hover:bg-white">
-                ✉ Teleport
-              </Link>
-              <Link href="/observatory/new" className="rounded-full border border-[#e9c46a]/60 bg-[#e9c46a]/10 px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#f4dfa6] uppercase hover:bg-[#e9c46a]/20">
-                + Written report
-              </Link>
-            </div>
-          ) : null}
         </div>
 
         <nav className="flex flex-wrap gap-2">

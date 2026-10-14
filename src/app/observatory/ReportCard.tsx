@@ -2,6 +2,7 @@ import Link from "next/link";
 import { kindInfo, timeAgo, type FeedReport, type Vote } from "@/lib/observatory";
 import { getDestination } from "@/lib/destinations";
 import VoteButtons from "./VoteButtons";
+import OriginalPrompt from "./OriginalPrompt";
 
 export default function ReportCard({
   report, myVote, signedIn, linkToDetail = true,
@@ -24,6 +25,10 @@ export default function ReportCard({
       </header>
 
       <h2 className="text-lg font-bold text-white">{report.subject}</h2>
+
+      {destination && (
+        <OriginalPrompt text={report.user_prompt} photoUrl={report.source_image_url} destination={destination.name} />
+      )}
 
       {report.image_url && destination ? (
         <figure className="flex flex-col gap-1.5">
