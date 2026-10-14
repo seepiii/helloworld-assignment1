@@ -26,7 +26,7 @@ export default function LaunchControl({ name }: { name: string }) {
     <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
       {phase === "idle" && (
         <>
-          <p className="font-mono text-xs tracking-[0.2em] text-white/40 uppercase">
+          <p className="font-mono text-sm tracking-[0.2em] text-white/60 uppercase">
             All stations go
           </p>
           <button
@@ -40,7 +40,7 @@ export default function LaunchControl({ name }: { name: string }) {
 
       {phase === "counting" && (
         <>
-          <p className="font-mono text-xs tracking-[0.2em] text-white/40 uppercase">
+          <p className="font-mono text-sm tracking-[0.2em] text-white/60 uppercase">
             T-minus
           </p>
           <p
@@ -52,7 +52,7 @@ export default function LaunchControl({ name }: { name: string }) {
           </p>
           <button
             onClick={() => setPhase("idle")}
-            className="font-mono text-[10px] tracking-[0.25em] text-red-300/70 uppercase hover:text-red-300"
+            className="font-mono text-xs tracking-[0.2em] text-red-300/80 uppercase hover:text-red-300"
           >
             Abort
           </button>
@@ -78,7 +78,7 @@ export default function LaunchControl({ name }: { name: string }) {
           <p className="text-sm text-white/50">Godspeed, {name}.</p>
           <button
             onClick={() => setPhase("idle")}
-            className="font-mono text-[10px] tracking-[0.25em] text-white/30 uppercase hover:text-white/60"
+            className="font-mono text-xs tracking-[0.2em] text-white/50 uppercase hover:text-white/60"
           >
             Reset pad
           </button>

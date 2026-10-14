@@ -13,7 +13,7 @@ export default function MissionLog({ lines }: { lines: string[] }) {
   }, [shown, lines.length]);
 
   return (
-    <ol className="flex min-h-[9rem] flex-col gap-1.5 font-mono text-xs text-white/60">
+    <ol className="flex min-h-[9rem] flex-col gap-1.5 font-mono text-sm text-white/70">
       {lines.slice(0, shown).map((line, i) => (
         <li key={i}>
           <span className="text-[#e9c46a]/60">&gt;</span> {line}

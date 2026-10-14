@@ -10,7 +10,7 @@ export default function GravityConsole({ planets }: { planets: Planet[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <label className="flex items-center gap-4 font-mono text-xs text-white/60">
+      <label className="flex items-center gap-4 font-mono text-sm text-white/70">
         <span className="shrink-0 tracking-[0.15em] uppercase">
           Earth weight
         </span>
@@ -31,7 +31,7 @@ export default function GravityConsole({ planets }: { planets: Planet[] }) {
         {planets.map((p) => (
           <li
             key={p.id}
-            className="grid grid-cols-[4.5rem_1fr_4rem] items-center gap-3 font-mono text-xs"
+            className="grid grid-cols-[5.5rem_1fr_4.5rem] items-center gap-3 font-mono text-sm"
           >
             <span className="text-white/60">{p.name}</span>
             <span className="h-1.5 overflow-hidden rounded-full bg-white/5">

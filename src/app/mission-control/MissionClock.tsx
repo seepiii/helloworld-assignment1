@@ -32,13 +32,13 @@ export default function MissionClock({ since }: { since: string | null }) {
   return (
     <div className="flex gap-8 font-mono">
       <div className="flex flex-col items-end">
-        <span className="text-[10px] tracking-[0.25em] text-white/35 uppercase">
+        <span className="text-xs tracking-[0.2em] text-white/50 uppercase">
           UTC
         </span>
         <span className="text-xl text-white tabular-nums">{utc}</span>
       </div>
       <div className="flex flex-col items-end">
-        <span className="text-[10px] tracking-[0.25em] text-white/35 uppercase">
+        <span className="text-xs tracking-[0.2em] text-white/50 uppercase">
           Mission elapsed
         </span>
         <span className="text-xl text-[#f4dfa6] tabular-nums">T+{met}</span>
