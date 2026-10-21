@@ -63,10 +63,10 @@ export default async function PlanetsPage() {
         )}
 
         <Link
-          href="/"
+          href="/hello"
           className="text-xs tracking-[0.2em] text-white/30 uppercase transition hover:text-white/60"
         >
-          &larr; back home
+          &larr; back to hello world
         </Link>
       </div>
     </main>

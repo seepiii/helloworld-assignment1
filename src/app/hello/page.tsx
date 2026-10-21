@@ -1,5 +1,5 @@
 import { getUserAndProfile } from "@/lib/supabase-server";
-import HelloWorld from "./HelloWorld";
+import HelloWorld from "../HelloWorld";
 
 export default async function Home() {
   const { user, profile } = await getUserAndProfile();
