@@ -18,6 +18,11 @@
   }
 }
 
+/* Feedback: "everything could be a bit bigger". Tailwind sizes are rem, so this scales text and spacing together. */
+html {
+  font-size: 112.5%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

@@ -83,7 +83,7 @@ export default function Teleporter({
     const where = destinations.find((d) => d.id === result.destination)!;
     return (
       <section className="hud-panel flex flex-col gap-4 p-6">
-        <span className="font-mono text-[10px] tracking-[0.25em] uppercase" style={{ color: where.color }}>
+        <span className="font-mono text-xs tracking-[0.25em] uppercase" style={{ color: where.color }}>
           ✉ Postcard received from {where.name} · {result.gravity}× Earth gravity
         </span>
         <h2 className="text-2xl font-bold text-white">{result.title}</h2>
@@ -91,7 +91,7 @@ export default function Teleporter({
         <figure className="flex flex-col gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={result.imageUrl} alt={`Alien artist's rendition: ${result.title}`} className="w-full rounded-lg border border-white/10" />
-          <figcaption className="font-mono text-[10px] tracking-[0.2em] text-white/35 uppercase">Alien artist rendition · Pollinations</figcaption>
+          <figcaption className="font-mono text-xs tracking-[0.2em] text-white/35 uppercase">Alien artist rendition · Pollinations</figcaption>
         </figure>
         <p className="font-mono text-sm leading-relaxed whitespace-pre-line text-white/85">{result.caption}</p>
         <div className="flex flex-wrap gap-3">
@@ -109,7 +109,7 @@ export default function Teleporter({
   return (
     <form onSubmit={teleport} className="flex flex-col gap-5">
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-2 font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">1 · Pick a planet the alien has visited</legend>
+        <legend className="mb-2 font-mono text-xs tracking-[0.25em] text-white/40 uppercase">1 · Pick a planet the alien has visited</legend>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {destinations.map((d) => (
             <label key={d.id} className={`hud-panel flex cursor-pointer flex-col gap-1 p-4 transition ${dest === d.id ? "border-[#e9c46a]/60 bg-[#e9c46a]/10" : "hover:bg-white/5"}`}>
@@ -118,7 +118,7 @@ export default function Teleporter({
                 <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: d.color, boxShadow: `0 0 10px ${d.color}` }} />
                 {d.name}
               </span>
-              <span className="font-mono text-[10px] tracking-[0.15em] text-[#e9c46a]/70 uppercase">{d.gravity}× gravity{d.fictional ? " · fictional" : ""}</span>
+              <span className="font-mono text-xs tracking-[0.15em] text-[#e9c46a]/70 uppercase">{d.gravity}× gravity{d.fictional ? " · fictional" : ""}</span>
               <span className="text-xs text-white/55">{d.blurb}</span>
             </label>
           ))}
@@ -126,7 +126,7 @@ export default function Teleporter({
       </fieldset>
 
       <div className="hud-panel flex flex-col gap-4 p-5">
-        <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">2 · What should we teleport to {chosen.name}?</span>
+        <span className="font-mono text-xs tracking-[0.25em] text-white/40 uppercase">2 · What should we teleport to {chosen.name}?</span>
         <span className="-mt-2 text-xs text-white/45">Type a thing or place, add a photo, or both. With a photo, the alien paints what&apos;s in it.</span>
         {anomaly && (
           <label className="flex items-center gap-3 text-sm text-white/70">

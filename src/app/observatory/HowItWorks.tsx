@@ -30,7 +30,7 @@ export default function HowItWorks() {
 
   return (
     <section className="hud-panel flex flex-col gap-4 p-5">
-      <header className="flex items-center justify-between font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">
+      <header className="flex items-center justify-between font-mono text-xs tracking-[0.25em] text-white/40 uppercase">
         <span>How the Observatory works</span>
         <button onClick={dismiss} className="hover:text-white/80">Dismiss ✕</button>
       </header>

@@ -75,11 +75,11 @@ export default async function MissionControlPage() {
       <SpaceBackground count={80} />
       <div className="scanline pointer-events-none fixed inset-x-0 top-0 h-24 bg-gradient-to-b from-transparent via-[#e9c46a]/[0.03] to-transparent" />
 
-      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-5">
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-5">
         {/* Header bar */}
         <div className="hud-panel flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-[#7ee2a8] uppercase">
+            <div className="flex items-center gap-2 font-mono text-xs tracking-[0.3em] text-[#7ee2a8] uppercase">
               <StatusLight /> Clearance granted · crew only
             </div>
             <h1
@@ -104,7 +104,7 @@ export default async function MissionControlPage() {
                   className="h-20 w-20 shrink-0 rounded-full border border-[#e9c46a]/40 object-cover"
                 />
               ) : (
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-dashed border-white/20 font-mono text-[10px] text-white/30 uppercase">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-dashed border-white/20 font-mono text-xs text-white/30 uppercase">
                   no photo
                 </div>
               )}

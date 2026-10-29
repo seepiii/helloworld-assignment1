@@ -71,14 +71,14 @@ export default function CreateReport({
   if (result) {
     return (
       <section className="hud-panel flex flex-col gap-4 p-6">
-        <span className="font-mono text-[10px] tracking-[0.25em] text-[#7ee2a8] uppercase">Report received · {info.label}</span>
+        <span className="font-mono text-xs tracking-[0.25em] text-[#7ee2a8] uppercase">Report received · {info.label}</span>
         <h2 className="text-xl font-bold text-white">{result.subject}</h2>
         {result.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={result.imageUrl} alt="" className="max-h-80 w-full rounded-lg object-cover" />
         )}
         <p className="font-mono text-sm leading-relaxed whitespace-pre-line text-white/85">{result.body}</p>
-        <p className="font-mono text-[10px] text-white/30">Written by {result.model} · saved with its prompt</p>
+        <p className="font-mono text-xs text-white/30">Written by {result.model} · saved with its prompt</p>
         <div className="flex flex-wrap gap-3">
           <Link href={`/observatory/${result.id}`} className="rounded-full bg-[#f4dfa6] px-5 py-2 text-xs font-bold tracking-[0.15em] text-[#1a1408] uppercase hover:bg-white">View & share</Link>
           <Link href="/observatory?sort=new" className="rounded-full border border-white/20 px-5 py-2 text-xs tracking-[0.15em] text-white/70 uppercase hover:text-white">See it in the feed</Link>
@@ -91,16 +91,16 @@ export default function CreateReport({
   return (
     <form onSubmit={transmit} className="flex flex-col gap-5">
       <fieldset className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <legend className="mb-2 font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">1 · Report type</legend>
+        <legend className="mb-2 font-mono text-xs tracking-[0.25em] text-white/40 uppercase">1 · Report type</legend>
         <Link
           href="/observatory/teleport"
           className="hud-panel cta-glow flex flex-col gap-1.5 border-dashed border-[#e9c46a]/70 p-4 transition hover:bg-[#e9c46a]/10"
         >
-          <span className="font-mono text-[9px] tracking-[0.25em] text-[#f4dfa6] uppercase">New · with an image</span>
+          <span className="font-mono text-xs tracking-[0.25em] text-[#f4dfa6] uppercase">New · with an image</span>
           <span className="text-base font-bold text-white">✉ Postcard</span>
           <span className="text-xs text-white/70">{kindInfo("postcard").blurb}</span>
           <span className="text-xs text-white/40 italic">e.g. “my dorm room” → Saturn</span>
-          <span className="mt-auto pt-1 font-mono text-[10px] tracking-[0.15em] text-[#f4dfa6] uppercase">Open the Teleporter →</span>
+          <span className="mt-auto pt-1 font-mono text-xs tracking-[0.15em] text-[#f4dfa6] uppercase">Open the Teleporter →</span>
         </Link>
         {KINDS.filter((k) => k.id !== "postcard").map((k) => (
           <label key={k.id} className={`hud-panel flex cursor-pointer flex-col gap-1.5 p-4 transition ${kind === k.id ? "border-[#e9c46a]/60 bg-[#e9c46a]/10" : "hover:bg-white/5"}`}>
@@ -108,13 +108,13 @@ export default function CreateReport({
             <span className="text-base font-bold text-white">{k.icon} {k.label}</span>
             <span className="text-xs text-white/60">{k.blurb}</span>
             <span className="text-xs text-white/35 italic">e.g. {k.example}</span>
-            <span className="mt-1 font-mono text-[10px] tracking-[0.15em] text-[#e9c46a]/70 uppercase">Photo {k.photo}</span>
+            <span className="mt-1 font-mono text-xs tracking-[0.15em] text-[#e9c46a]/70 uppercase">Photo {k.photo}</span>
           </label>
         ))}
       </fieldset>
 
       <div className="hud-panel flex flex-col gap-4 p-5">
-        <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">2 · What should the alien study?</span>
+        <span className="font-mono text-xs tracking-[0.25em] text-white/40 uppercase">2 · What should the alien study?</span>
         <span className="-mt-2 text-xs text-white/45">Type a subject, add a photo, or both. With a photo, the alien studies what&apos;s in it.</span>
         {anomaly && (
           <label className="flex items-center gap-3 text-sm text-white/70">

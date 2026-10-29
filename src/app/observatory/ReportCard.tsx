@@ -11,7 +11,7 @@ export default function ReportCard({
   const destination = report.kind === "postcard" ? getDestination(report.planet) : null;
   return (
     <article className="hud-panel flex flex-col gap-4 p-5">
-      <header className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] tracking-[0.2em] uppercase">
+      <header className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs tracking-[0.2em] uppercase">
         <span className="flex items-center gap-3">
           <span className="text-[#e9c46a]/80">{kind.icon} {kind.label}</span>
           {destination && (
@@ -34,7 +34,7 @@ export default function ReportCard({
         <figure className="flex flex-col gap-1.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={report.image_url} alt={`Alien artist's rendition: ${report.subject}`} className="w-full rounded-lg border border-white/10" />
-          <figcaption className="font-mono text-[10px] tracking-[0.2em] text-white/35 uppercase">
+          <figcaption className="font-mono text-xs tracking-[0.2em] text-white/35 uppercase">
             Alien artist rendition · {destination.name}
           </figcaption>
         </figure>

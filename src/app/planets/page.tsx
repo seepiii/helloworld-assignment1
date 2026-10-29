@@ -15,7 +15,7 @@ export default async function PlanetsPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#050505] px-6 py-16">
       <SpaceBackground count={90} />
 
-      <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-10">
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center gap-10">
         <div className="flex flex-col items-center gap-2 text-center">
           <h1
             className="text-3xl font-bold tracking-wide text-white sm:text-4xl"

@@ -19,9 +19,9 @@ export default async function NewReportPage({ searchParams }: PageProps<"/observ
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050505] px-4 pt-20 pb-12 sm:px-8">
       <SpaceBackground count={60} />
-      <div className="relative z-10 mx-auto flex max-w-3xl flex-col gap-5">
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <p className="font-mono text-[10px] tracking-[0.3em] text-[#7ee2a8] uppercase">New report · Agent {profile?.first_name}</p>
+          <p className="font-mono text-xs tracking-[0.3em] text-[#7ee2a8] uppercase">New report · Agent {profile?.first_name}</p>
           <h1 className="text-3xl font-bold text-white">File a report</h1>
           <p className="text-sm text-white/60">
             Pick a report type, tell the alien what to look at, and hit Transmit. The alien (Gemini) writes its

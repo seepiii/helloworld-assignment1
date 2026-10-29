@@ -43,16 +43,16 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
   };
 
   const tab = (active: boolean) =>
-    `rounded-full px-4 py-1.5 font-mono text-[11px] tracking-[0.15em] uppercase transition ${
+    `rounded-full px-4 py-1.5 font-mono text-xs tracking-[0.15em] uppercase transition ${
       active ? "bg-[#e9c46a]/20 text-[#f4dfa6] border border-[#e9c46a]/50" : "border border-white/10 text-white/50 hover:text-white/80"
     }`;
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050505] px-4 pt-20 pb-12 sm:px-8">
       <SpaceBackground count={70} />
-      <div className="relative z-10 mx-auto flex max-w-3xl flex-col gap-5">
+      <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <p className="font-mono text-[10px] tracking-[0.3em] text-[#7ee2a8] uppercase">Studying Earth since 2026</p>
+          <p className="font-mono text-xs tracking-[0.3em] text-[#7ee2a8] uppercase">Studying Earth since 2026</p>
           <h1 className="text-3xl font-bold tracking-wide text-white sm:text-4xl" style={{ textShadow: "0 0 22px rgba(233, 196, 106, 0.3)" }}>
             The Earth Observatory
           </h1>
@@ -62,7 +62,7 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
         </div>
 
         <section className="hud-panel flex flex-col gap-3 p-5">
-          <span className="font-mono text-[10px] tracking-[0.25em] text-white/40 uppercase">Create · everything lands in the rankings below</span>
+          <span className="font-mono text-xs tracking-[0.25em] text-white/40 uppercase">Create · everything lands in the rankings below</span>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {CREATE.map((c) => (
               <Link
@@ -75,7 +75,7 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
                 }`}
               >
                 <span className={`text-sm font-bold ${c.featured ? "text-[#f4dfa6]" : "text-white"}`}>{c.label}</span>
-                <span className="text-[11px] leading-snug text-white/50">{c.hint}</span>
+                <span className="text-xs leading-snug text-white/50">{c.hint}</span>
               </Link>
             ))}
           </div>
@@ -92,7 +92,7 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
         {anomaly && (
           <section className="hud-panel flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-1">
-              <span className="font-mono text-[10px] tracking-[0.25em] text-[#7ee2a8] uppercase">Today&apos;s anomaly</span>
+              <span className="font-mono text-xs tracking-[0.25em] text-[#7ee2a8] uppercase">Today&apos;s anomaly</span>
               <span className="text-xl font-bold text-white">{anomaly.subject}</span>
               {anomaly.blurb && <span className="text-sm text-white/50">{anomaly.blurb}</span>}
             </div>
@@ -135,9 +135,11 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
           </div>
         )}
 
-        {reports?.map((r) => (
-          <ReportCard key={r.id} report={r} myVote={myVotes[r.id] ?? 0} signedIn={!!user} />
-        ))}
+        <div className="grid items-start gap-5 lg:grid-cols-2">
+          {reports?.map((r) => (
+            <ReportCard key={r.id} report={r} myVote={myVotes[r.id] ?? 0} signedIn={!!user} />
+          ))}
+        </div>
       </div>
     </main>
   );

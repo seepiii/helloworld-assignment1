@@ -16,7 +16,7 @@ export default function OriginalPrompt({
         <img src={photoUrl} alt="Photo the user teleported" className="h-12 w-12 shrink-0 rounded-md object-cover" />
       )}
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="font-mono text-[9px] tracking-[0.25em] text-white/40 uppercase">Original prompt</span>
+        <span className="font-mono text-xs tracking-[0.25em] text-white/40 uppercase">Original prompt</span>
         <span className="text-sm text-white/85">
           {text ? <>&ldquo;{text}&rdquo;</> : <span className="italic text-white/60">a photo</span>}
           {destination && <span className="text-white/45"> → {destination}</span>}
