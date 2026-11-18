@@ -7,8 +7,8 @@ import ZoomableImage from "./ZoomableImage";
 // Each card has two clearly labelled parts: what a person gave the alien (small, plain),
 // and what the AI alien made from it (big, highlighted) — the thing people vote on.
 export default function ReportCard({
-  report, myVote, signedIn, linkToDetail = true,
-}: { report: FeedReport; myVote: Vote; signedIn: boolean; linkToDetail?: boolean }) {
+  report, myVote, signedIn, linkToDetail = true, rank,
+}: { report: FeedReport; myVote: Vote; signedIn: boolean; linkToDetail?: boolean; rank?: number }) {
   const kind = kindInfo(report.kind);
   const destination = report.kind === "postcard" ? getDestination(report.planet) : null;
   const author = report.author_name ?? "Unknown";
@@ -19,9 +19,10 @@ export default function ReportCard({
 
   return (
     <article className="@container hud-panel flex flex-col gap-4 p-5 sm:p-7">
-      <header className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs tracking-[0.2em] uppercase">
+      <header className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="flex items-center gap-3">
-          <span className="text-[#e9c46a]/80">{kind.icon} {kind.label}</span>
+          {rank != null && <span className="text-xl font-bold text-white">#{rank}</span>}
+          <span className="font-semibold text-[#e9c46a]/90">{kind.icon} {kind.label}</span>
           {destination && (
             <span className="flex items-center gap-1.5" style={{ color: destination.color }}>
               <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: destination.color }} />
@@ -29,7 +30,7 @@ export default function ReportCard({
             </span>
           )}
         </span>
-        {report.anomaly_date && <span className="rounded-full border border-[#7ee2a8]/40 px-2 py-0.5 text-[#7ee2a8]">Daily anomaly</span>}
+        {report.anomaly_date && <span className="rounded-full border border-[#7ee2a8]/40 px-2.5 py-0.5 text-xs text-[#7ee2a8]">About a daily topic</span>}
       </header>
 
       {/* 1 · The person's input */}
@@ -42,9 +43,7 @@ export default function ReportCard({
           />
         )}
         <div className="flex min-w-0 flex-col gap-1">
-          <span className="font-mono text-xs tracking-[0.2em] text-white/45 uppercase">
-            Agent {author} sent the alien
-          </span>
+          <span className="text-sm text-white/50">{author} gave the alien:</span>
           <span className="text-lg font-semibold text-white">
             {inputText ? <>&ldquo;{inputText}&rdquo;</> : <span className="italic text-white/60">a photo</span>}
             {destination && <span className="font-normal text-white/50"> → teleport to {destination.name}</span>}
@@ -54,8 +53,8 @@ export default function ReportCard({
 
       {/* 2 · What the AI made from it */}
       <section className="flex flex-col gap-4 rounded-xl border-2 border-[#e9c46a]/50 bg-[#e9c46a]/[0.06] p-4 sm:p-5">
-        <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#f4dfa6] uppercase">
-          🛸 {destination ? "The alien's postcard · AI image + caption" : "The alien's report · written by AI"}
+        <span className="text-sm font-bold text-[#f4dfa6]">
+          🛸 {destination ? "What the AI alien painted and wrote:" : "What the AI alien wrote:"}
         </span>
 
         {destination ? (
