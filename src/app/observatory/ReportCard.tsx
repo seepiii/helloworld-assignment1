@@ -2,6 +2,7 @@ import Link from "next/link";
 import { kindInfo, timeAgo, type FeedReport, type Vote } from "@/lib/observatory";
 import { getDestination } from "@/lib/destinations";
 import VoteButtons from "./VoteButtons";
+import ZoomableImage from "./ZoomableImage";
 
 // Each card has two clearly labelled parts: what a person gave the alien (small, plain),
 // and what the AI alien made from it (big, highlighted) — the thing people vote on.
@@ -34,11 +35,10 @@ export default function ReportCard({
       {/* 1 · The person's input */}
       <section className="flex items-center gap-4 rounded-lg border border-white/10 bg-black/30 p-3">
         {inputPhoto && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <ZoomableImage
             src={inputPhoto}
             alt={`Photo Agent ${author} sent`}
-            className="h-20 w-20 shrink-0 rounded-md object-cover sm:h-24 sm:w-24"
+            className="h-20 w-20 rounded-md object-cover sm:h-24 sm:w-24"
           />
         )}
         <div className="flex min-w-0 flex-col gap-1">
@@ -64,8 +64,7 @@ export default function ReportCard({
             <div className="flex flex-col gap-5 @3xl:flex-row @3xl:items-start">
               {report.image_url && (
                 <figure className="flex flex-col gap-1.5 @3xl:w-1/2 @3xl:shrink-0">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={report.image_url} alt={`Alien artist's rendition: ${report.subject}`} className="w-full rounded-lg border border-white/10" />
+                  <ZoomableImage src={report.image_url} alt={`Alien artist's rendition: ${report.subject}`} className="w-full rounded-lg border border-white/10" />
                   <figcaption className="font-mono text-xs tracking-[0.2em] text-white/35 uppercase">
                     Alien artist rendition · {destination.name}
                   </figcaption>
