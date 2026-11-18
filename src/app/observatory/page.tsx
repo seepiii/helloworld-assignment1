@@ -135,7 +135,8 @@ export default async function ObservatoryPage({ searchParams }: PageProps<"/obse
           </div>
         )}
 
-        <div className="grid items-start gap-5 lg:grid-cols-2">
+        {/* One report per row so the ranking reads top to bottom; each card spreads out to fill the width. */}
+        <div className="flex flex-col gap-6">
           {reports?.map((r) => (
             <ReportCard key={r.id} report={r} myVote={myVotes[r.id] ?? 0} signedIn={!!user} />
           ))}

@@ -10,7 +10,7 @@ export default function ReportCard({
   const kind = kindInfo(report.kind);
   const destination = report.kind === "postcard" ? getDestination(report.planet) : null;
   return (
-    <article className="hud-panel flex flex-col gap-4 p-5">
+    <article className="@container hud-panel flex flex-col gap-5 p-5 sm:p-7">
       <header className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs tracking-[0.2em] uppercase">
         <span className="flex items-center gap-3">
           <span className="text-[#e9c46a]/80">{kind.icon} {kind.label}</span>
@@ -24,14 +24,12 @@ export default function ReportCard({
         {report.anomaly_date && <span className="rounded-full border border-[#7ee2a8]/40 px-2 py-0.5 text-[#7ee2a8]">Daily anomaly</span>}
       </header>
 
-      <h2 className="text-lg font-bold text-white">{report.subject}</h2>
+      <h2 className="text-2xl font-bold text-white">{report.subject}</h2>
 
-      {destination && (
-        <OriginalPrompt text={report.user_prompt} photoUrl={report.source_image_url} destination={destination.name} />
-      )}
-
+      {/* On a wide card the picture sits beside the text instead of stretching across the whole row. */}
+      <div className="flex flex-col gap-5 @3xl:flex-row @3xl:items-start">
       {report.image_url && destination ? (
-        <figure className="flex flex-col gap-1.5">
+        <figure className="flex flex-col gap-1.5 @3xl:w-1/2 @3xl:shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={report.image_url} alt={`Alien artist's rendition: ${report.subject}`} className="w-full rounded-lg border border-white/10" />
           <figcaption className="font-mono text-xs tracking-[0.2em] text-white/35 uppercase">
@@ -40,10 +38,16 @@ export default function ReportCard({
         </figure>
       ) : report.image_url ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={report.image_url} alt={`Photo for ${report.subject}`} className="max-h-80 w-full rounded-lg border border-white/10 object-cover" />
+        <img src={report.image_url} alt={`Photo for ${report.subject}`} className="max-h-96 w-full rounded-lg border border-white/10 object-cover @3xl:w-1/2 @3xl:shrink-0" />
       ) : null}
 
-      <p className="font-mono text-sm leading-relaxed whitespace-pre-line text-white/80">{report.body}</p>
+      <div className="flex min-w-0 flex-1 flex-col gap-4">
+        {destination && (
+          <OriginalPrompt text={report.user_prompt} photoUrl={report.source_image_url} destination={destination.name} />
+        )}
+        <p className="font-mono text-base leading-relaxed whitespace-pre-line text-white/85">{report.body}</p>
+      </div>
+      </div>
 
       <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/5 pt-3">
         <div className="flex items-center gap-2 text-xs text-white/40">
